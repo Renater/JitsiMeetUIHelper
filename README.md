@@ -45,3 +45,9 @@ Supported translations for now are:
 * en (English)
 
 If you want have your own translation, just copy the **js/lang/fr.js** file into your language (example: **de.js**), then edit the translations.
+
+# Known limitations
+
+At the moment, this tool won't work if you are using a Jitsi Meet instance with authentication.
+
+We're working on it!

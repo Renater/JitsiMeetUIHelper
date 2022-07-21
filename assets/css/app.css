@@ -1,0 +1,144 @@
+/* Main rules */
+body{
+    margin: 0;
+    font-family:BlinkMacSystemFont,open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif!important;
+}
+
+button{
+    border: none;
+    background: transparent;
+}
+
+
+/* Iframe container */
+iframe#main_iframe,
+div#main_iframe_container{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+/* Side and DTMF menu */
+.side{
+    background: linear-gradient(to left, #ddd, #fff);
+    padding: 0.5rem;
+    border: 1px solid #aaaaaa;
+    border-radius: 4px;
+}
+
+div#dtmf_menu{
+    position: fixed;
+    bottom: 1rem;
+    left: 1rem;
+    width: 12rem;
+}
+
+div#dtmf_show_menu.side{
+    background: linear-gradient(to right top, #ddd, #fff, #ddd);
+    width: 20rem;
+}
+div#dtmf_show_menu.side button{
+    width: 20rem;
+    text-align: center;
+    font-weight: bold;
+}
+div#dtmf_show_menu.side button span.right{
+    font-style: italic;
+}
+
+div.dtmf_item{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 20rem;
+
+    border-bottom: 1px solid black;
+    padding-bottom: 0.5rem;
+    padding-top: 1rem;
+}
+div.dtmf_item:last-child{
+    border: none;
+}
+
+div#dtmf_menu_content{
+    min-width: 20rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    top: 0;
+    right: 0;
+    width: 20rem;
+    height: 100%;
+    overflow: hidden;
+    z-index: 999;
+    transform: translateX(-110%);
+    -webkit-transform: translateX(-110%);
+}
+
+div[data-content="icon"]{
+    width: 20%;
+}
+div[data-content="label"]{
+    width: 70%;
+}
+div[data-content="dtmf"]{
+    width: 10%;
+    text-align: center;
+    border: 1px solid #aaa;
+    padding: 0.2rem 0 0.2rem 0;
+}
+
+
+/* Keyframes */
+
+@keyframes slide-in {
+    0% {
+        -webkit-transform: translateX(0%);
+    }
+    100% {
+        -webkit-transform: translateX(-110%);
+    }
+}
+
+@-webkit-keyframes slide-in {
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-110%);
+    }
+}
+
+@keyframes slide-out {
+    0% {
+        transform: translateX(-110%);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+@-webkit-keyframes slide-out {
+    0% {
+        -webkit-transform: translateX(-110%);
+    }
+    100% {
+        -webkit-transform: translateX(0%);
+    }
+}
+
+
+/* Animations */
+
+.show {
+    animation: slide-out 0.5s forwards;
+    -webkit-animation: slide-out 0.5s forwards;
+}
+
+.hide {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}

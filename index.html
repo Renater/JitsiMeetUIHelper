@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>JitsiMeetUIHelper</title>
+
+    <script type="text/javascript" src="assets/js/app.js"></script>
+    <script type="text/javascript" src="assets/js/lang.js"></script>
+    <script type="text/javascript" src="assets/js/lang/fr.js"></script>
+    <script type="text/javascript" src="assets/js/JitsiMeetUIHelper.js"></script>
+    <script type="text/javascript" src="https://rendez-vous.renater.fr/external_api.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+<div id="main_iframe_container">
+</div>
+<div id="dtmf_menu">
+    <div id="dtmf_menu_content" class="side">
+        <div class="dtmf_item">
+            <div data-content="icon">
+                <img src="assets/images/mute.svg" alt="toggle micro"/>
+            </div>
+            <div data-content="label">Muet / actif </div>
+            <div data-content="dtmf">1</div>
+        </div>
+        <div class="dtmf_item">
+            <div data-content="icon">
+                <img src="assets/images/show_camera.svg" alt="toggle camera"/>
+            </div>
+            <div data-content="label">Démarrer / arrêter la caméra</div>
+            <div data-content="dtmf">2</div>
+        </div>
+        <div class="dtmf_item">
+            <div data-content="icon">
+                <img src="assets/images/chat.svg" alt="toggle chat"/>
+            </div>
+            <div data-content="label">Ouvrir le chat</div>
+            <div data-content="dtmf">3</div>
+        </div>
+        <div class="dtmf_item">
+            <div data-content="icon">
+                <img src="assets/images/mosaic.svg" alt="toggle mosaic"/>
+            </div>
+            <div data-content="label">Activer / désactiver la vue panoramique</div>
+            <div data-content="dtmf">4</div>
+        </div>
+        <div class="dtmf_item">
+            <div data-content="icon">
+                <img src="assets/images/raise_hand.svg" alt="toggle mosaic"/>
+            </div>
+            <div data-content="label">Lever / baisser la main</div>
+            <div data-content="dtmf">5</div>
+        </div>
+    </div>
+
+
+    <div id="dtmf_show_menu" class="side">
+        <button id="dtmf_show_menu_btn">
+            <span class="left">Menu</span>
+            <span class="right">(appuyer sur #)</span>
+        </button>
+    </div>
+</div>
+
+</body>
+</html>

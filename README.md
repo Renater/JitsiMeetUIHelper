@@ -25,6 +25,16 @@ Available parameters:
 * enable_tts: Enable TTS (browser embedded Text To Speach)
  
 
+## Usage
+
+To make it work, the user have to specify the **room_id** (ie. the Jitsi Meet conference name);
+
+To do this, the URL must contains the parameter "room_id=XXXX";
+
+Example: 
+
+*http://yourdomain.com/JitsiMeetUIHelper/index.html?room_id=my_room_name*
+
 
 ## Translate the TTS data
 

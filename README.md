@@ -62,7 +62,10 @@ Supported translations for now are:
 * fr (French)
 * en (English)
 
-If you want have your own translation, just copy the **js/lang/fr.js** file into your language (example: **de.js**), then edit the translations.
+If you want have your own translation :
+ * copy the **js/lang/fr.js** file into your language (example: **de.js**),
+ * Update the translation file
+ * Change the lang code in the **config.js** file
 
 # Known limitations
 

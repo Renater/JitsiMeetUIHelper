@@ -35,6 +35,24 @@ Example:
 
 *http://yourdomain.com/JitsiMeetUIHelper/index.html?room_id=my_room_name*
 
+### Supported commands
+
+Here is the commands supported at the moment:
+* **show-dtmf-menu**: Show/hide DTMF shortcut menu
+* **'toggle-audio'**: Toggle microphone state
+* **'toggle-video'**: Toggle camera state
+* **'toggle-chat'**: Toggle chat' state
+* **'toggle-tile-view'**: Toggle use of tile view
+* **'toggle-rise-hand'**: Toggle hand rise/down
+
+
+Example:
+```javascript
+window.JitsiMeetUIHelper.executeCommand('toggle-video');
+```
+
+
+
 
 ## Translate the TTS data
 

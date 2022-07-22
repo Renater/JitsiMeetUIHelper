@@ -43,21 +43,6 @@ class JitsiMeetUIHelper {
 
 
     /**
-     * Keep each component state (used by TTS)
-     *
-     * @type {{"toggle-rise-hand": boolean, "show-dtmf-menu": boolean, "toggle-audio": boolean, "toggle-tile-view": boolean, "toggle-chat": boolean, "toggle-video": boolean}}
-     */
-    states = {
-        'show-dtmf-menu': false,
-        'toggle-audio': true,
-        'toggle-video': true,
-        'toggle-chat': false,
-        'toggle-tile-view': false,
-        'toggle-rise-hand' : false
-    };
-
-
-    /**
      * Constructor
      */
     constructor(){
@@ -109,7 +94,6 @@ class JitsiMeetUIHelper {
      * @see https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe/
      */
     initJitsiMeetConference(){
-        let context = this;
         let mainOptions = {
             roomName: this.roomID,
             width: document.getElementById('main_iframe_container').width,
@@ -129,12 +113,11 @@ class JitsiMeetUIHelper {
             parentNode: document.getElementById('main_iframe_container')
         }
 
-        this.states['toggle-audio'] = !mainOptions.configOverwrite.startWithAudioMuted;
-        this.states['toggle-video'] = !mainOptions.configOverwrite.startWithVideoMuted;
-
         // Connect main client
         let subDomain = this.config.domain.replace(/^https?:\/\//, '');
         this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
+
+        this.addListeners();
 
     }
 
@@ -154,6 +137,7 @@ class JitsiMeetUIHelper {
             switch (name){
                 case 'show-dtmf-menu':
                     this.#toggleMenu();
+                    this.speakFromCommand('show-dtmf-menu', document.getElementById('dtmf_menu_content').classList.contains('show'));
                     break;
 
                 case 'toggle-audio':
@@ -163,16 +147,51 @@ class JitsiMeetUIHelper {
                 case 'toggle-rise-hand':
                     // Send generic command to JitsiMeetExternalAPI
                     this.jitsiApiClient.executeCommand(this.commands[name], args);
-                    // Update state for component
-                    this.states[name] = !this.states[name];
                     break;
 
                 default:
                     console.error(`[Error] Command '${name}' not handled yet`)
             }
-
-            this.speakFromCommand(name);
         }
+    }
+
+
+    /**
+     * Listen to state changes
+     */
+    addListeners(){
+        let context = this;
+
+        // Mute / unmute audio
+        this.jitsiApiClient.addListener('audioMuteStatusChanged', function (response){
+                context.speakFromCommand('toggle-audio', !response.muted);
+            }
+        );
+
+        // Mute / unmute video
+        this.jitsiApiClient.addListener('videoMuteStatusChanged', function (response){
+                context.speakFromCommand('toggle-video', !response.muted);
+            }
+        );
+
+        // Hide / show chat'
+        this.jitsiApiClient.addListener('chatUpdated', function (response){
+                context.speakFromCommand('toggle-chat', response.isOpen);
+            }
+        );
+
+        // Hide / show tile view
+        this.jitsiApiClient.addListener('tileViewChanged', function (response){
+                context.speakFromCommand('toggle-tile-view', response.enabled);
+            }
+        );
+
+        // Hand rise / down
+        this.jitsiApiClient.addListener('raiseHandUpdated', function (response){
+                context.speakFromCommand('toggle-rise-hand', response.handRaised);
+            }
+        );
+
     }
 
 
@@ -196,8 +215,9 @@ class JitsiMeetUIHelper {
      * Get text to pass to the TTS from command
      *
      * @param command
+     * @param show
      */
-    speakFromCommand(command){
+    speakFromCommand(command, show = null){
         // TTS disabled
         if (!this.config.enable_tts) return;
 
@@ -209,34 +229,31 @@ class JitsiMeetUIHelper {
                 break;
 
             case 'toggle-audio':
-                trKey = this.states[command] ? 'micro_enabled' : 'micro_disabled';
+                trKey = show ? 'micro_enabled' : 'micro_disabled';
                 break;
 
             case 'toggle-video':
-                trKey = this.states[command] ? 'camera_enabled' : 'camera_disabled';
+                trKey = show ? 'camera_enabled' : 'camera_disabled';
                 break;
 
             case 'toggle-chat':
-                trKey = this.states[command] ? 'chat_shown' : 'chat_hidden';
+                trKey = show ? 'chat_shown' : 'chat_hidden';
                 break;
 
             case 'toggle-tile-view':
-                trKey = this.states[command] ? 'tile_view_shown' : 'tile_view_hidden';
+                trKey = show ? 'tile_view_shown' : 'tile_view_hidden';
                 break;
 
             case 'toggle-rise-hand':
-                trKey = this.states[command] ? 'hand_raised' : 'hand_down';
+                trKey = show ? 'hand_raised' : 'hand_down';
                 break;
 
             default:
                 console.error(`[Error] [TTS] Command '${name}' not handled yet`);
         }
 
-
         if (trKey !== null){
-            let translated = Lang.translate(trKey)
-            if (translated !== null)
-                this.speak(translated);
+            this.speak(Lang.translate(trKey));
         }
     }
 
@@ -248,12 +265,13 @@ class JitsiMeetUIHelper {
      *
      * @param text Text to be spoken
      */
-    speak(text){
+    speak(text = null){
         // Speak only if enabled in config
-        if (this.config.enable_tts){
+        if (this.config.enable_tts && text !== null){
             let utterance = new SpeechSynthesisUtterance(text);
             speechSynthesis.speak(utterance);
         }
     }
-
 }
+
+export default JitsiMeetUIHelper;

@@ -1,10 +1,10 @@
-window.onload = function() {
-    /* Initiate IFrame */
-    let helper = new JitsiMeetUIHelper('main_iframe');
+import JitsiMeetUIHelper from './JitsiMeetUIHelper.js';
 
-    /* Add listener for click on show DTMF menu */
-    helper.dtmfMenuButton.addEventListener('click', function(event){
-        helper.executeCommand('show-dtmf-menu');
-    });
-};
+/* Initiate IFrame */
+var helper = new JitsiMeetUIHelper();
+
+/* Add listener for click on show DTMF menu */
+helper.dtmfMenuButton.addEventListener('click', function(event){
+    helper.executeCommand('show-dtmf-menu');
+});
 

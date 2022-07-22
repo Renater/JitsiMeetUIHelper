@@ -110,15 +110,19 @@ class JitsiMeetUIHelper {
                 p2p: {enabled: false},
                 desktopSharingChromeDisabled: true
             },
-            parentNode: document.getElementById('main_iframe_container')
+            parentNode: document.getElementById('main_iframe_container'),
         }
 
         // Connect main client
         let subDomain = this.config.domain.replace(/^https?:\/\//, '');
         this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
 
-        this.addListeners();
-
+        // Use timeout to not speak states changed at startup
+        let context = this;
+        setTimeout(function(){
+            // Add listeners
+            context.addListeners();
+        }, 2500);
     }
 
 

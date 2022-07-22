@@ -35,10 +35,10 @@ div#dtmf_menu{
 
 div#dtmf_show_menu.side{
     background: linear-gradient(to right top, #ddd, #fff, #ddd);
-    width: 20rem;
+    width: 23rem;
 }
 div#dtmf_show_menu.side button{
-    width: 20rem;
+    width: 23rem;
     text-align: center;
     font-weight: bold;
 }
@@ -54,23 +54,26 @@ div.dtmf_item{
     align-items: center;
     justify-content: center;
 
-    width: 20rem;
+    width: 23rem;
 
-    border-bottom: 1px solid black;
+    border-top: 1px solid black;
     padding-bottom: 0.5rem;
     padding-top: 1rem;
 }
-div.dtmf_item:last-child{
+div.dtmf_item:first-child{
     border: none;
+}
+div.dtmf_item:last-child{
+    margin-top: 2rem;
 }
 
 div#dtmf_menu_content{
-    min-width: 20rem;
+    min-width: 23rem;
     margin-bottom: 1rem;
     font-size: 1rem;
     top: 0;
     right: 0;
-    width: 20rem;
+    width: 23rem;
     height: 100%;
     overflow: hidden;
     z-index: 999;
@@ -79,10 +82,10 @@ div#dtmf_menu_content{
 }
 
 div[data-content="icon"]{
-    width: 20%;
+    width: 10%;
 }
 div[data-content="label"]{
-    width: 70%;
+    width: 80%;
 }
 div[data-content="dtmf"]{
     width: 10%;

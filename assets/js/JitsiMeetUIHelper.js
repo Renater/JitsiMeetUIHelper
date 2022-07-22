@@ -5,28 +5,58 @@ class JitsiMeetUIHelper {
 
     /**
      * Room ID
+     *
+     * @type {string|null}
      */
-    roomID = undefined;
+    roomID = null;
 
     /**
      * JitsiMeetExternalAPI instance
+     *
+     * @type {Object|null}
      */
-    jitsiApiClient = undefined;
+    jitsiApiClient = null;
 
     /**
      * the DTMF menu
+     *
+     * @type {HTMLElement|null}
      */
-    dtmfMenu= undefined;
+    dtmfMenu = null;
 
     /**
-     * @var object : Main button to show DTMF menu
+     * Main button to show DTMF menu
+     *
+     * @type {HTMLElement|null}
      */
-    dtmfMenuButton = undefined;
+    dtmfMenuButton = null;
+
 
     /**
-     * Configuration parameters
+     * Hide menu 10 seconds after user shew it
+     *
+     * @type {number|null}
      */
-    config = {};
+    menuTimer = null;
+
+    /**
+     * Interval used to auto hide menu after 10s
+     *
+     * @type {number|null}
+     */
+    menuInterval = null;
+
+
+    /**
+     * Default configuration parameters
+     */
+    config = {
+        "lang": "fr",
+        "domain": undefined,
+        "enable_tts": true,
+        "auto_hide_menu_timer": 10
+    };
+
 
     /**
      * List of available commands
@@ -68,12 +98,18 @@ class JitsiMeetUIHelper {
             .then(response => {
                 response.json()
                     .then( config => {
-                        this.config = config;
+                        for (let i in this.config){
+                            if (config.hasOwnProperty(i)){
+                                this.config[i] = config[i]
+                            }
+                        }
 
                         // If TTS disabled, hide on UI
                         if (!this.config.enable_tts){
                             document.querySelector('div[data-content="tts"]').classList.add('hide');
                         }
+
+                        this.menuTimer = this.config.auto_hide_menu_timer;
 
                         // Update locale
                         if (this.config.hasOwnProperty('lang'))
@@ -145,7 +181,6 @@ class JitsiMeetUIHelper {
             switch (name){
                 case 'show-dtmf-menu':
                     this.#toggleMenu();
-                    this.speakFromCommand('show-dtmf-menu', document.getElementById('dtmf_menu_content').classList.contains('show'));
                     break;
                 case 'toggle-tts':
                     this.config.enable_tts = !this.config.enable_tts;
@@ -214,10 +249,35 @@ class JitsiMeetUIHelper {
             this.dtmfMenu.classList.remove('hide');
             this.dtmfMenu.classList.add('show');
 
+            // TTS
+            this.speakFromCommand('show-dtmf-menu', true);
+
+            let context = this;
+            if (this.menuTimer === null) this.menuInterval = this.config.auto_hide_menu_timer;
+
+            context.menuInterval = setInterval(function(){
+                if (context.menuTimer <= 0){
+                    context.#toggleMenu();
+                    clearInterval(context.menuInterval);
+                    context.menuTimer = context.config.auto_hide_menu_timer;
+                }else{
+                    context.menuTimer--;
+                }
+            }, 1000);
 
         }else {
             this.dtmfMenu.classList.remove('show');
             this.dtmfMenu.classList.add('hide');
+
+            // TTS
+            this.speakFromCommand('show-dtmf-menu', false);
+
+            this.menuTimer = null;
+            if (this.menuInterval !== null) {
+                clearInterval(this.menuInterval);
+                this.menuInterval = null;
+                this.menuTimer = this.config.auto_hide_menu_timer;
+            }
         }
     }
 

@@ -39,11 +39,11 @@ Example:
 
 Here is the commands supported at the moment:
 * **show-dtmf-menu**: Show/hide DTMF shortcut menu
-* **'toggle-audio'**: Toggle microphone state
-* **'toggle-video'**: Toggle camera state
-* **'toggle-chat'**: Toggle chat' state
-* **'toggle-tile-view'**: Toggle use of tile view
-* **'toggle-rise-hand'**: Toggle hand rise/down
+* **toggle-audio**: Toggle microphone state
+* **toggle-video**: Toggle camera state
+* **toggle-chat**: Toggle chat' state
+* **toggle-tile-view**: Toggle use of tile view
+* **toggle-rise-hand**: Toggle hand rise/down
 
 
 Example:

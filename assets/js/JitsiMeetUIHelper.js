@@ -54,7 +54,16 @@ class JitsiMeetUIHelper {
         "lang": "fr",
         "domain": undefined,
         "enable_tts": true,
-        "auto_hide_menu_timer": 10
+        "auto_hide_menu_timer": 10,
+        "shortcuts":{
+            "show-dtmf-menu": "h",
+            "toggle-audio": "m",
+            "toggle-video": "v",
+            "toggle-chat": "c",
+            "toggle-tile-view": "w",
+            "toggle-rise-hand" : "r",
+            "toggle-tts" : "x"
+        }
     };
 
 
@@ -149,7 +158,8 @@ class JitsiMeetUIHelper {
                 startWithAudioMuted: false,
                 startWithVideoMuted: false,
                 p2p: {enabled: false},
-                desktopSharingChromeDisabled: true
+                desktopSharingChromeDisabled: true,
+                disableShortcuts: true
             },
             parentNode: document.getElementById('main_iframe_container'),
         }
@@ -161,7 +171,8 @@ class JitsiMeetUIHelper {
         let context = this;
         this.jitsiApiClient.addListener('videoConferenceJoined', function(){
             // Add listeners when conference is ready
-            context.addListeners();
+            context.addAPIListeners();
+            context.addShortcutListeners();
         });
     }
 
@@ -181,7 +192,8 @@ class JitsiMeetUIHelper {
             switch (name){
                 case 'show-dtmf-menu':
                     this.#toggleMenu();
-                    break;
+                    return;
+
                 case 'toggle-tts':
                     this.config.enable_tts = !this.config.enable_tts;
                     break;
@@ -198,6 +210,9 @@ class JitsiMeetUIHelper {
                 default:
                     console.error(`[Error] Command '${name}' not handled yet`)
             }
+
+            // reset timer
+            this.menuTimer = this.config.auto_hide_menu_timer;
         }
     }
 
@@ -205,7 +220,7 @@ class JitsiMeetUIHelper {
     /**
      * Listen to state changes
      */
-    addListeners(){
+    addAPIListeners(){
         let context = this;
 
         // Mute / unmute audio
@@ -237,15 +252,31 @@ class JitsiMeetUIHelper {
                 context.speakFromCommand('toggle-rise-hand', response.handRaised);
             }
         );
+    }
+
+    /**
+     * Add shortcut listeners (defined in configuration file)
+     */
+    addShortcutListeners(){
+        let context = this;
+        document.onkeydown = function (kEvent){
+            Object.entries(context.config.shortcuts).forEach( k => {
+                if (k[1] === kEvent.key){
+                    context.executeCommand(k[0]);
+                }
+            })
+        }
 
     }
 
 
     /**
      * Command to toggle hide/show main menu
+     *
+     * @param forceHide True to force hide
      */
-    #toggleMenu(){
-        if (!this.dtmfMenu.classList.contains('show')) {
+    #toggleMenu(forceHide = false){
+        if (forceHide || !this.dtmfMenu.classList.contains('show')) {
             this.dtmfMenu.classList.remove('hide');
             this.dtmfMenu.classList.add('show');
 

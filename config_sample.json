@@ -2,5 +2,14 @@
   "lang": "fr",
   "domain": "https://rendez-vous.renater.fr",
   "enable_tts": true,
-  "auto_hide_menu_timer": 10
+  "auto_hide_menu_timer": 10,
+  "shortcuts":{
+    "show-dtmf-menu": "h",
+    "toggle-audio": "m",
+    "toggle-video": "v",
+    "toggle-chat": "c",
+    "toggle-tile-view": "w",
+    "toggle-rise-hand" : "r",
+    "toggle-tts" : "x"
+  }
 }

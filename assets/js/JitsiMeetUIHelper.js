@@ -28,7 +28,6 @@ class JitsiMeetUIHelper {
      */
     config = {};
 
-
     /**
      * List of available commands
      */
@@ -38,7 +37,8 @@ class JitsiMeetUIHelper {
         'toggle-video': 'toggleVideo',
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
-        'toggle-rise-hand' : 'toggleRiseHand'
+        'toggle-rise-hand' : 'toggleRiseHand',
+        'toggle-tts' : 'toggleTts'
     };
 
 
@@ -69,6 +69,11 @@ class JitsiMeetUIHelper {
                 response.json()
                     .then( config => {
                         this.config = config;
+
+                        // If TTS disabled, hide on UI
+                        if (!this.config.enable_tts){
+                            document.querySelector('div[data-content="tts"]').classList.add('hide');
+                        }
 
                         // Update locale
                         if (this.config.hasOwnProperty('lang'))
@@ -142,6 +147,9 @@ class JitsiMeetUIHelper {
                 case 'show-dtmf-menu':
                     this.#toggleMenu();
                     this.speakFromCommand('show-dtmf-menu', document.getElementById('dtmf_menu_content').classList.contains('show'));
+                    break;
+                case 'toggle-tts':
+                    this.config.enable_tts = !this.config.enable_tts;
                     break;
 
                 case 'toggle-audio':

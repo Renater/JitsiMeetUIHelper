@@ -63,8 +63,11 @@ div.dtmf_item{
 div.dtmf_item:first-child{
     border: none;
 }
-div.dtmf_item:last-child{
+div.dtmf_item[data-content="tts"]{
     margin-top: 2rem;
+}
+div.dtmf_item[data-content="tts"].hide{
+    display: none;
 }
 
 div#dtmf_menu_content{

@@ -9,7 +9,7 @@ This tools helps to manipulate an embedded JitsiMeet conference (using the [Jits
 
 ## Installation
 
-You need to expose the index.html files and the assets folder threw any web server.
+You need to expose the index.html and the assets folder threw any web server.
 
 Then, change the URL to your **external_api.js** in the head section of the index.html file (limitation due to CORS)
 
@@ -20,9 +20,9 @@ Note: some configuration parameters are needed, see the next part.
 Copy the **config_sample.json** to **config.json** at the root of your app.
 
 Available parameters: 
-* lang: Lang used by TTS
+* lang: Lang used by TTS (browser embedded Text To Speach)
 * domain: Domain to initiate the room
-* enable_tts: Enable TTS (browser embedded Text To Speach)
+* enable_tts: Enable TTS 
  
 
 ## Usage

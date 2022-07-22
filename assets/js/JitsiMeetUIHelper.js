@@ -122,12 +122,11 @@ class JitsiMeetUIHelper {
         let subDomain = this.config.domain.replace(/^https?:\/\//, '');
         this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
 
-        // Use timeout to not speak states changed at startup
         let context = this;
-        setTimeout(function(){
-            // Add listeners
+        this.jitsiApiClient.addListener('videoConferenceJoined', function(){
+            // Add listeners when conference is ready
             context.addListeners();
-        }, 2500);
+        });
     }
 
 

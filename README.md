@@ -19,11 +19,23 @@ Note: some configuration parameters are needed, see the next part.
 
 Copy the **config_sample.json** to **config.json** at the root of your app.
 
-Available parameters: 
-* lang: Lang used by TTS (browser embedded Text To Speach)
-* domain: Domain to initiate the room
-* enable_tts: Enable TTS 
-* auto_hide_menu_timer: automatically hide menu after this timer (in seconds) 
+Available parameters:
+
+| Key                        | Description                                           | Default value                  |
+|----------------------------|-------------------------------------------------------|--------------------------------|
+| lang                       | Lang used by TTS (browser embedded Text To Speech)    | fr                             |
+| domain                     | Domain to initiate the room                           | https://rendez-vous.renater.fr |
+| enable_tts                 | Enable / disable TTS (Text To Speech)                 | true                           |
+| auto_hide_menu_timer       | Automatically hide menu after this timer (in seconds) | 10                             |
+| shortcuts                  | List of keyboard shortcuts (lower case)               |                                |
+| shortcuts.show-dtmf-menu   | Show / hide menu                                      | h                              |
+| shortcuts.toggle-audio     | Mute / unmute audio                                   | m                              |
+| shortcuts.toggle-video     | Mute / unmute video                                   | v                              |
+| shortcuts.toggle-chat      | Show / hide chat'                                     | c                              |
+| shortcuts.toggle-tile-view | Show / hide tile view                                 | w                              |
+| shortcuts.toggle-rise-hand | Rise / down hand                                      | r                              |
+| shortcuts.toggle-tts       | Enable / disable TTS (Text To Speech)                 | x                              |
+
  
 
 ## Usage

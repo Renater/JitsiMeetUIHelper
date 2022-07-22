@@ -23,6 +23,7 @@ Available parameters:
 * lang: Lang used by TTS (browser embedded Text To Speach)
 * domain: Domain to initiate the room
 * enable_tts: Enable TTS 
+* auto_hide_menu_timer: automatically hide menu after this timer (in seconds) 
  
 
 ## Usage

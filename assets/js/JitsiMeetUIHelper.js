@@ -237,9 +237,7 @@ export default class JitsiMeetUIHelper {
         switch (element) {
             case 'room_id':
                 if (reason === 'not_set') {
-                    // hide UI components
-                    // document.getElementById('dtmf_menu').classList.add('hidden');
-                    // Show error
+                    // Room id not provided, show IVR UI
                     this.ivr.show();
                 }
                 break;

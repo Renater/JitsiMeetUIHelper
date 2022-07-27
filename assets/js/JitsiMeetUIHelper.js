@@ -1,7 +1,13 @@
+import IVR from './modules/IVR.js';
+import Config from './modules/Config.js';
+import Lang from './modules/Lang.js';
+import TTS from './modules/TTS.js';
+import Room from './modules/Room.js';
+
 /**
  * Class JitsiMeetUIHelper
  */
-class JitsiMeetUIHelper {
+export default class JitsiMeetUIHelper {
 
     /**
      * Room ID
@@ -9,13 +15,6 @@ class JitsiMeetUIHelper {
      * @type {string|null}
      */
     roomID = null;
-
-    /**
-     * JitsiMeetExternalAPI instance
-     *
-     * @type {Object|null}
-     */
-    jitsiApiClient = null;
 
     /**
      * the DTMF menu
@@ -48,26 +47,6 @@ class JitsiMeetUIHelper {
 
 
     /**
-     * Default configuration parameters
-     */
-    config = {
-        "lang": "fr",
-        "domain": undefined,
-        "enable_tts": true,
-        "auto_hide_menu_timer": 10,
-        "shortcuts":{
-            "show-dtmf-menu": "h",
-            "toggle-audio": "m",
-            "toggle-video": "v",
-            "toggle-chat": "c",
-            "toggle-tile-view": "w",
-            "toggle-rise-hand" : "r",
-            "toggle-tts" : "x"
-        }
-    };
-
-
-    /**
      * List of available commands
      */
     commands = {
@@ -76,104 +55,90 @@ class JitsiMeetUIHelper {
         'toggle-video': 'toggleVideo',
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
-        'toggle-rise-hand' : 'toggleRiseHand',
-        'toggle-tts' : 'toggleTts'
+        'toggle-rise-hand': 'toggleRiseHand',
+        'toggle-tts': 'toggleTts'
     };
 
 
     /**
+     * IVR
+     *
+     * @type {*}
+     */
+    ivr = null;
+
+    /**
      * Constructor
      */
-    constructor(){
+    constructor() {
         // IFrame already initialised
         if (window.JitsiMeetUIHelper !== undefined) return;
 
         this.dtmfMenu = document.getElementById('dtmf_menu_content');
         this.dtmfMenuButton = document.getElementById('dtmf_show_menu_btn');
 
+        this.ivr = new IVR();
+
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
 
-        if (!urlParams.has('room_id'))
-            throw new Error('room_id not set')
+        window.JitsiMeetUIHelper = this;
 
-        this.roomID = urlParams.get('room_id');
+        if (!urlParams.has('room_id')) {
+            this.onError('room_id', 'not_set');
 
-        // Update page title
-        document.title = this.roomID;
+        }else {
+            this.roomID = urlParams.get('room_id');
 
-        // Fetch config
-        fetch('config.json', {"method": "get"})
-            .then(response => {
-                response.json()
-                    .then( config => {
-                        for (let i in this.config){
-                            if (config.hasOwnProperty(i)){
-                                this.config[i] = config[i]
+            // Update page title
+            document.title = this.roomID;
+
+            // Fetch config
+            fetch('config.json', {"method": "get"})
+                .then(response => {
+                    response.json()
+                        .then(config => {
+                            for (let i in Config.get('*')) {
+                                if (config.hasOwnProperty(i)) {
+                                    Config.set(i, config[i]);
+                                }
                             }
-                        }
 
-                        // If TTS disabled, hide on UI
-                        if (!this.config.enable_tts){
-                            document.querySelector('div[data-content="tts"]').classList.add('hide');
-                        }
+                            // If TTS disabled, hide on UI
+                            if (!Config.get('enable_tts')) {
+                                document.querySelector('div[data-content="tts"]').classList.add('hide');
+                            }
 
-                        this.menuTimer = this.config.auto_hide_menu_timer;
+                            this.menuTimer = Config.get('auto_hide_menu_timer');
 
-                        // Update locale
-                        if (this.config.hasOwnProperty('lang'))
-                            Lang.changeLocal(this.config.lang);
+                            // Update locale
+                            let lang = Config.get('lang');
+                            if (lang)
+                                Lang.changeLocal(lang);
 
-                        // init the room
-                        this.initJitsiMeetConference();
+                            // init the room
+                            let context = this;
+                            this.room = new Room(this.roomID);
+                            this.room.initJitsiMeetConference()
+                                .then(function(){
+                                    context.#toggleMenu(true, true);
+                                    document.getElementById('dtmf_show_menu')
+                                        .classList.remove('hidden')
 
-                        window.JitsiMeetUIHelper = this;
-                    })
-                    .catch(error => {
-                        throw new Error(error);
-                    })
-            })
-            .catch(error => {
-                throw new Error(error);
-            })
-    }
-
-    /**
-     * Init the JitsiMeet conference (using the JitsiMeetExternalAPI)
-     *
-     * @see https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe/
-     */
-    initJitsiMeetConference(){
-        let mainOptions = {
-            roomName: this.roomID,
-            width: document.getElementById('main_iframe_container').width,
-            height: document.getElementById('main_iframe_container').height,
-            interfaceConfigOverwrite: {
-                CLOSE_PAGE_GUEST_HINT: true
-            },
-            configOverwrite: {
-                callStatsID: '',
-                defaultLanguage: 'fr',
-                enablePopupExternalAuth: true,
-                startWithAudioMuted: false,
-                startWithVideoMuted: false,
-                p2p: {enabled: false},
-                desktopSharingChromeDisabled: true,
-                disableShortcuts: true
-            },
-            parentNode: document.getElementById('main_iframe_container'),
+                                }).catch(function (){
+                                    context.#toggleMenu(false, false);
+                                    document.getElementById('dtmf_show_menu')
+                                        .classList.add('hidden')
+                                });
+                        })
+                        .catch(error => {
+                            throw new Error(error);
+                        })
+                })
+                .catch(error => {
+                    throw new Error(error);
+                })
         }
-
-        // Connect main client
-        let subDomain = this.config.domain.replace(/^https?:\/\//, '');
-        this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
-
-        let context = this;
-        this.jitsiApiClient.addListener('videoConferenceJoined', function(){
-            // Add listeners when conference is ready
-            context.addAPIListeners();
-            context.addShortcutListeners();
-        });
     }
 
 
@@ -187,15 +152,15 @@ class JitsiMeetUIHelper {
         if (!(name in this.commands)) {
             console.error(`[Error] Command '${name}' not found`)
 
-        }else{
+        } else {
             console.log(`Received command: ${name}`);
-            switch (name){
+            switch (name) {
                 case 'show-dtmf-menu':
                     this.#toggleMenu();
                     return;
 
                 case 'toggle-tts':
-                    this.config.enable_tts = !this.config.enable_tts;
+                    Config.set('enable_tts', !Config.get('enable_tts'));
                     break;
 
                 case 'toggle-audio':
@@ -203,8 +168,7 @@ class JitsiMeetUIHelper {
                 case 'toggle-chat':
                 case 'toggle-tile-view':
                 case 'toggle-rise-hand':
-                    // Send generic command to JitsiMeetExternalAPI
-                    this.jitsiApiClient.executeCommand(this.commands[name], args);
+                    this.room.executeCommand(name, args);
                     break;
 
                 default:
@@ -212,168 +176,75 @@ class JitsiMeetUIHelper {
             }
 
             // reset timer
-            this.menuTimer = this.config.auto_hide_menu_timer;
+            this.menuTimer = Config.get('auto_hide_menu_timer');
         }
-    }
-
-
-    /**
-     * Listen to state changes
-     */
-    addAPIListeners(){
-        let context = this;
-
-        // Mute / unmute audio
-        this.jitsiApiClient.addListener('audioMuteStatusChanged', function (response){
-                context.speakFromCommand('toggle-audio', !response.muted);
-            }
-        );
-
-        // Mute / unmute video
-        this.jitsiApiClient.addListener('videoMuteStatusChanged', function (response){
-                context.speakFromCommand('toggle-video', !response.muted);
-            }
-        );
-
-        // Hide / show chat'
-        this.jitsiApiClient.addListener('chatUpdated', function (response){
-                context.speakFromCommand('toggle-chat', response.isOpen);
-            }
-        );
-
-        // Hide / show tile view
-        this.jitsiApiClient.addListener('tileViewChanged', function (response){
-                context.speakFromCommand('toggle-tile-view', response.enabled);
-            }
-        );
-
-        // Hand rise / down
-        this.jitsiApiClient.addListener('raiseHandUpdated', function (response){
-                context.speakFromCommand('toggle-rise-hand', response.handRaised);
-            }
-        );
-    }
-
-    /**
-     * Add shortcut listeners (defined in configuration file)
-     */
-    addShortcutListeners(){
-        let context = this;
-        document.onkeydown = function (kEvent){
-            Object.entries(context.config.shortcuts).forEach( k => {
-                if (k[1] === kEvent.key){
-                    context.executeCommand(k[0]);
-                }
-            })
-        }
-
     }
 
 
     /**
      * Command to toggle hide/show main menu
      *
-     * @param forceHide True to force hide
+     * @param forceShow True to force showing menu
+     * @param silent True to force not use TTS
      */
-    #toggleMenu(forceHide = false){
-        if (forceHide || !this.dtmfMenu.classList.contains('show')) {
+    #toggleMenu(forceShow = false, silent = false) {
+        if (forceShow || !this.dtmfMenu.classList.contains('show')) {
             this.dtmfMenu.classList.remove('hide');
             this.dtmfMenu.classList.add('show');
 
             // TTS
-            this.speakFromCommand('show-dtmf-menu', true);
+            if (!silent)
+                this.speak(Lang.translate('menu_shown'));
 
             let context = this;
-            if (this.menuTimer === null) this.menuInterval = this.config.auto_hide_menu_timer;
+            if (this.menuTimer === null) this.menuTimer = Config.get('auto_hide_menu_timer');
 
-            context.menuInterval = setInterval(function(){
-                if (context.menuTimer <= 0){
+            this.menuInterval = setInterval(function () {
+                if (context.menuTimer <= 0) {
                     context.#toggleMenu();
                     clearInterval(context.menuInterval);
-                    context.menuTimer = context.config.auto_hide_menu_timer;
-                }else{
+                    context.menuTimer = Config.get('auto_hide_menu_timer');
+                } else {
                     context.menuTimer--;
                 }
             }, 1000);
 
-        }else {
+        } else {
             this.dtmfMenu.classList.remove('show');
             this.dtmfMenu.classList.add('hide');
 
             // TTS
-            this.speakFromCommand('show-dtmf-menu', false);
+            if (!silent)
+                this.speak(Lang.translate('menu_hidden'));
 
             this.menuTimer = null;
             if (this.menuInterval !== null) {
                 clearInterval(this.menuInterval);
                 this.menuInterval = null;
-                this.menuTimer = this.config.auto_hide_menu_timer;
+                this.menuTimer = Config.get('auto_hide_menu_timer');
             }
         }
     }
 
 
-    /**
-     * Get text to pass to the TTS from command
-     *
-     * @param command
-     * @param show
-     */
-    speakFromCommand(command, show = null){
-        // TTS disabled
-        if (!this.config.enable_tts) return;
-
-        let trKey = null;
-
-        switch (command){
-            case 'show-dtmf-menu':
-                trKey = this.dtmfMenu.classList.contains('show') ? 'menu_shown' : 'menu_hidden';
+    onError(element, reason) {
+        switch (element) {
+            case 'room_id':
+                if (reason === 'not_set') {
+                    // hide UI components
+                    // document.getElementById('dtmf_menu').classList.add('hidden');
+                    // Show error
+                    this.ivr.show();
+                }
                 break;
-
-            case 'toggle-audio':
-                trKey = show ? 'micro_enabled' : 'micro_disabled';
-                break;
-
-            case 'toggle-video':
-                trKey = show ? 'camera_enabled' : 'camera_disabled';
-                break;
-
-            case 'toggle-chat':
-                trKey = show ? 'chat_shown' : 'chat_hidden';
-                break;
-
-            case 'toggle-tile-view':
-                trKey = show ? 'tile_view_shown' : 'tile_view_hidden';
-                break;
-
-            case 'toggle-rise-hand':
-                trKey = show ? 'hand_raised' : 'hand_down';
-                break;
-
             default:
-                console.error(`[Error] [TTS] Command '${name}' not handled yet`);
-        }
-
-        if (trKey !== null){
-            this.speak(Lang.translate(trKey));
+                console.error(`[Error] ${element} / ${reason}`)
         }
     }
 
-
-    /**
-     * EXPERIMENTAL
-     * Use browser embedded TTS
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
-     *
-     * @param text Text to be spoken
-     */
-    speak(text = null){
-        // Speak only if enabled in config
-        if (this.config.enable_tts && text !== null){
-            let utterance = new SpeechSynthesisUtterance(text);
-            speechSynthesis.speak(utterance);
+    speak(text){
+        if (Config.get('enable_tts')){
+            TTS.speak(text);
         }
     }
 }
-
-export default JitsiMeetUIHelper;

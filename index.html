@@ -6,14 +6,32 @@
     <title>JitsiMeetUIHelper</title>
 
     <script type="module" src="assets/js/app.js"></script>
-    <script type="text/javascript" src="assets/js/lang.js"></script>
-    <script type="text/javascript" src="assets/js/lang/fr.js"></script>
     <script type="text/javascript" src="https://rendez-vous.renater.fr/external_api.js"></script>
 
     <link type="text/css" rel="stylesheet" href="assets/css/app.css">
 </head>
 <body>
-<div id="main_iframe_container">
+<div id="main_iframe_container" class="hidden">
+</div>
+
+<div id="ivr_container" class="hidden">
+    <div id="header">
+        <img src="assets/images/jitsi.svg" alt="jitsi logo"  class="filter-black"/>
+    </div>
+    <div id="ivr_main">
+        <div>
+            Veuillez entrez le numéro de votre conférence (terminez par #)
+        </div>
+        <div id="ivr_enter_room">
+            <span id="ivr_enter_room_label">
+                <input type="text" id="input_room_id" />
+            </span>
+            <span id="ivr_enter_room_button">
+                <button id="btn_enter_room">Entrer</button>
+            </span>
+        </div>
+    </div>
+
 </div>
 <div id="dtmf_menu">
     <div id="dtmf_menu_content" class="side">
@@ -61,14 +79,15 @@
         </div>
     </div>
 
-
-    <div id="dtmf_show_menu" class="side">
+    <div id="dtmf_show_menu" class="side hidden">
         <button id="dtmf_show_menu_btn">
             <span class="left">Menu</span>
             <span class="right">(appuyer sur #)</span>
         </button>
     </div>
 </div>
+
+
 
 </body>
 </html>

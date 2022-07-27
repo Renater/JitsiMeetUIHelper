@@ -1,4 +1,8 @@
 import JitsiMeetUIHelper from './JitsiMeetUIHelper.js';
+import Lang from './modules/Lang.js';
+
+/* Get translations */
+Lang.init();
 
 /* Initiate IFrame */
 var helper = new JitsiMeetUIHelper();

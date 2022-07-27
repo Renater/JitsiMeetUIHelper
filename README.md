@@ -76,9 +76,9 @@ Supported translations for now are:
 * en (English)
 
 If you want have your own translation :
- * copy the **js/lang/fr.js** file into your language (example: **de.js**),
+ * copy the **js/lang/fr.json** file into your language (example: **de.js**),
  * Update the translation file
- * Change the lang code in the **config.js** file
+ * Change the lang code in the **config.json** file
 
 # Known limitations
 

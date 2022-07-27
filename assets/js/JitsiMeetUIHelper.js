@@ -227,6 +227,12 @@ export default class JitsiMeetUIHelper {
     }
 
 
+    /**
+     * Default behavior on error
+     *
+     * @param element
+     * @param reason
+     */
     onError(element, reason) {
         switch (element) {
             case 'room_id':
@@ -242,6 +248,11 @@ export default class JitsiMeetUIHelper {
         }
     }
 
+    /**
+     * Use TTS to speak asked text
+     *
+     * @param text
+     */
     speak(text){
         if (Config.get('enable_tts')){
             TTS.speak(text);

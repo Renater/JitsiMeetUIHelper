@@ -1,7 +1,5 @@
-
-// Populate dictionary with FR translations
-Lang.populateDictionary({
-    "fr": {
+{
+    "en": {
         "home": "Home",
         "menu_shown": "Menu shown",
         "menu_hidden": "Menu hidden",
@@ -14,6 +12,6 @@ Lang.populateDictionary({
         "tile_view_shown": "Tile view shown",
         "tile_view_hidden": "Tile view hidden",
         "hand_raised": "Hand raised",
-        "hand_down": "Hand down",
+        "hand_down": "Hand down"
     }
-});
+}

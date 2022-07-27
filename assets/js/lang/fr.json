@@ -1,6 +1,4 @@
-
-// Populate dictionary with FR translations
-Lang.populateDictionary({
+{
     "fr": {
         "home": "Accueil",
         "menu_shown": "Menu affiché",
@@ -14,6 +12,6 @@ Lang.populateDictionary({
         "tile_view_shown": "Vue mosaïque affichée",
         "tile_view_hidden": "Vue mosaïque masquée",
         "hand_raised": "Main levée",
-        "hand_down": "Main baissée",
+        "hand_down": "Main baissée"
     }
-});
+}

@@ -60,7 +60,7 @@ export default class IVR {
         if (this.roomID.length <= 3){
             this.onError('room_id_too_short')
         }else{
-            console.log('GOGOGO '+this.roomID);
+            console.log('[TODO] '+this.roomID);
         }
     }
 }

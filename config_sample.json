@@ -2,6 +2,7 @@
   "lang": "fr",
   "domain": "https://rendez-vous.renater.fr",
   "enable_tts": true,
+  "enable_ivr": true,
   "auto_hide_menu_timer": 10,
   "shortcuts":{
     "show-dtmf-menu": "h",

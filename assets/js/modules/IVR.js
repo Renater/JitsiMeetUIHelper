@@ -1,3 +1,5 @@
+import Config from './Config';
+
 /**
  * Class IVR
  */
@@ -9,14 +11,17 @@ export default class IVR {
     roomID = "";
 
     constructor() {
+        // IVR disabled in config
+        if (!Config.get('enable_ivr')) return;
+
         this.inputRoomID = document.getElementById('input_room_id');
         this.container = document.getElementById('ivr_container');
         this.enterRoomBtn = document.getElementById('btn_enter_room');
 
         let context = this;
 
-        this.inputRoomID.addEventListener('keyup', function (event){
-            context.onKeyup(event.key);
+        this.inputRoomID.addEventListener('keydown', function (event){
+            context.onKeydown(event);
         })
 
         this.enterRoomBtn.addEventListener('click', function (event){
@@ -35,15 +40,31 @@ export default class IVR {
 
     /* Listeners */
 
-    onKeyup(key){
-        if (key === '#'){
+    onKeydown(event){
+        if (event.key === '#'){
+            // Enter room
             this.enterRoomBtn.click();
-        }else{
-            this.roomID += key;
-        }
 
+        }else if (!isNaN(event.key)) {
+            // Add digit
+            this.roomID += event.key;
+
+        }else if (event.key === 'Backspace'){
+            // Remove last digit
+            this.roomID = this.roomID.slice(0, -1)
+
+        }else{
+            event.preventDefault();
+            event.stopPropagation();
+        }
     }
 
+
+    /**
+     * Default on error
+     *
+     * @param reason
+     */
     onError(reason){
         switch (reason){
             case 'room_id_too_short':
@@ -56,11 +77,16 @@ export default class IVR {
         }
     }
 
+    /**
+     * Enter room
+     */
     enterRoom(){
         if (this.roomID.length <= 3){
             this.onError('room_id_too_short')
-        }else{
-            console.log('[TODO] '+this.roomID);
+        }else {
+            // Get conference room_id
+            // let url = `${Config.get('domain')}`;
+            // let conference =
         }
     }
 }

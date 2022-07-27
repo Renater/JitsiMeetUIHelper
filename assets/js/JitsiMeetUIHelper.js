@@ -238,12 +238,21 @@ export default class JitsiMeetUIHelper {
             case 'room_id':
                 if (reason === 'not_set') {
                     // Room id not provided, show IVR UI
-                    this.ivr.show();
+                    if (Config.get('enable_ivr')){
+                        this.ivr.show();
+                    }else{
+                        this.renderError('room_id_not_set');
+                    }
                 }
                 break;
             default:
                 console.error(`[Error] ${element} / ${reason}`)
         }
+    }
+
+
+    renderError(reason){
+
     }
 
     /**

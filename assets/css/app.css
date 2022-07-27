@@ -117,7 +117,8 @@ div[data-content="dtmf"]{
 div#ivr_container{
     z-index: 100;
 }
-div#ivr_container div#header{
+.header-logo{
+    position: relative;
     margin-top: 2rem;
     margin-left: 2rem;
 }
@@ -158,26 +159,39 @@ div#ivr_enter_room span#ivr_enter_room_label input{
     border:none;
     width: 100%;
     height: 2rem;
+    letter-spacing: 1em;
 }
 div#ivr_enter_room span#ivr_enter_room_label input:focus-visible{
     border:none;
     outline:none;
 }
 
-div#ivr_main{
+div.centered{
     max-width: 480px;
     width: auto;
     margin:auto;
 
     color: black;
 
-    background: #fff;
+    background: #efefef;
     border-radius: 10px;
     padding: 2rem;
     text-align: center;
     line-height: 2rem;
 }
 
+
+/* Errors */
+
+div#error_container img{
+    filter: invert(26%) sepia(17%) saturate(1301%) hue-rotate(182deg) brightness(95%) contrast(92%);
+}
+div#error_container span{
+    font-size: larger;
+    vertical-align: text-bottom;
+    font-weight: bold;
+    color: #35476b;
+}
 
 
 /* Keyframes */

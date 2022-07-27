@@ -6,7 +6,7 @@
     <title>JitsiMeetUIHelper</title>
 
     <script type="module" src="assets/js/app.js"></script>
-    <script type="text/javascript" src="https://rendez-vous.renater.fr/external_api.js"></script>
+    <script type="text/javascript" src="https://rdv42.rendez-vous.renater.fr/external_api.js"></script>
 
     <link type="text/css" rel="stylesheet" href="assets/css/app.css">
 </head>
@@ -14,76 +14,88 @@
 <div id="main_iframe_container" class="hidden">
 </div>
 
-<div id="ivr_container" class="hidden">
-    <div id="header">
+<div id="main">
+    <div class="header-logo">
         <img src="assets/images/jitsi.svg" alt="jitsi logo"  class="filter-black"/>
     </div>
-    <div id="ivr_main">
-        <div>
-            Veuillez entrez le numéro de votre conférence (terminez par #)
-        </div>
-        <div id="ivr_enter_room">
-            <span id="ivr_enter_room_label">
-                <input type="text" id="input_room_id" />
-            </span>
-            <span id="ivr_enter_room_button">
-                <button id="btn_enter_room">Entrer</button>
-            </span>
+
+
+    <div id="ivr_container" class="hidden">
+        <div id="ivr_main" class="centered">
+            <div>
+                Veuillez entrez le numéro de votre conférence (terminez par #)
+            </div>
+            <div id="ivr_enter_room">
+                <span id="ivr_enter_room_label">
+                    <input type="text" id="input_room_id" />
+                </span>
+                <span id="ivr_enter_room_button">
+                    <button id="btn_enter_room">Entrer</button>
+                </span>
+            </div>
         </div>
     </div>
 
-</div>
-<div id="dtmf_menu">
-    <div id="dtmf_menu_content" class="side">
-        <div class="dtmf_item">
-            <div data-content="icon">
-                <img src="assets/images/mute.svg" alt="toggle micro"/>
+    <div id="errors" class="">
+        <div id="error_container" class="centered">
+            <div>
+                <img src="assets/images/smiley-sad.svg" width="32" height="32">
+                <span>Impossible d'initialiser votre conférence.</span>
             </div>
-            <div data-content="label">Muet / actif </div>
-            <div data-content="dtmf">1</div>
-        </div>
-        <div class="dtmf_item">
-            <div data-content="icon">
-                <img src="assets/images/show_camera.svg" alt="toggle camera"/>
-            </div>
-            <div data-content="label">Démarrer / arrêter la caméra</div>
-            <div data-content="dtmf">2</div>
-        </div>
-        <div class="dtmf_item">
-            <div data-content="icon">
-                <img src="assets/images/chat.svg" alt="toggle chat"/>
-            </div>
-            <div data-content="label">Ouvrir le chat</div>
-            <div data-content="dtmf">3</div>
-        </div>
-        <div class="dtmf_item">
-            <div data-content="icon">
-                <img src="assets/images/mosaic.svg" alt="toggle mosaic"/>
-            </div>
-            <div data-content="label">Activer / désactiver la vue panoramique</div>
-            <div data-content="dtmf">4</div>
-        </div>
-        <div class="dtmf_item">
-            <div data-content="icon">
-                <img src="assets/images/raise_hand.svg" alt="toggle mosaic"/>
-            </div>
-            <div data-content="label">Lever / baisser la main</div>
-            <div data-content="dtmf">5</div>
-        </div>
-        <div class="dtmf_item" data-content="tts">
-            <div data-content="icon">
-                <img src="assets/images/tts.svg" width="22" height="22" alt="toggle tts"/>
-            </div>
-            <div data-content="label">Activer / désactiver la synthèse vocale</div>
-            <div data-content="dtmf">0</div>
         </div>
     </div>
+    <div id="dtmf_menu">
+        <div id="dtmf_menu_content" class="side">
+            <div class="dtmf_item">
+                <div data-content="icon">
+                    <img src="assets/images/mute.svg" alt="toggle micro"/>
+                </div>
+                <div data-content="label">Muet / actif </div>
+                <div data-content="dtmf">1</div>
+            </div>
+            <div class="dtmf_item">
+                <div data-content="icon">
+                    <img src="assets/images/show_camera.svg" alt="toggle camera"/>
+                </div>
+                <div data-content="label">Démarrer / arrêter la caméra</div>
+                <div data-content="dtmf">2</div>
+            </div>
+            <div class="dtmf_item">
+                <div data-content="icon">
+                    <img src="assets/images/chat.svg" alt="toggle chat"/>
+                </div>
+                <div data-content="label">Ouvrir le chat</div>
+                <div data-content="dtmf">3</div>
+            </div>
+            <div class="dtmf_item">
+                <div data-content="icon">
+                    <img src="assets/images/mosaic.svg" alt="toggle mosaic"/>
+                </div>
+                <div data-content="label">Activer / désactiver la vue panoramique</div>
+                <div data-content="dtmf">4</div>
+            </div>
+            <div class="dtmf_item">
+                <div data-content="icon">
+                    <img src="assets/images/raise_hand.svg" alt="toggle mosaic"/>
+                </div>
+                <div data-content="label">Lever / baisser la main</div>
+                <div data-content="dtmf">5</div>
+            </div>
+            <div class="dtmf_item" data-content="tts">
+                <div data-content="icon">
+                    <img src="assets/images/tts.svg" width="22" height="22" alt="toggle tts"/>
+                </div>
+                <div data-content="label">Activer / désactiver la synthèse vocale</div>
+                <div data-content="dtmf">0</div>
+            </div>
+        </div>
 
-    <div id="dtmf_show_menu" class="side hidden">
-        <button id="dtmf_show_menu_btn">
-            <span class="left">Menu</span>
-            <span class="right">(appuyer sur #)</span>
-        </button>
+        <div id="dtmf_show_menu" class="side hidden">
+            <button id="dtmf_show_menu_btn">
+                <span class="left">Menu</span>
+                <span class="right">(appuyer sur #)</span>
+            </button>
+        </div>
     </div>
 </div>
 

@@ -1,4 +1,15 @@
+import Config from "./Config.js";
+
 export default class TTS {
+
+    /**
+     * Return true if IVR is enabled in config
+     *
+     * @returns {boolean}
+     */
+    static enabled(){
+        return Config.get('tts.enabled') === true;
+    }
 
     /**
      * EXPERIMENTAL

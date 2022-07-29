@@ -3,8 +3,8 @@ body{
     margin: 0;
     font-family:BlinkMacSystemFont,open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif!important;
 
-    background: rgb(95,123,191);
-    background: linear-gradient(90deg, rgba(95,123,191,1) 0%, rgba(158,185,236,1) 30%, rgba(239,239,239,1) 50%, rgba(158,185,236,1) 70%, rgba(95,123,191,1) 100%);
+    background: rgb(239,239,239);
+    background: linear-gradient(0deg, rgba(239,239,239,1) 0%, rgba(158,185,236,1) 52%, rgba(95,123,191,1) 100%);
 
     overflow: hidden;
 
@@ -15,12 +15,26 @@ body{
 }
 
 .hidden{
-    display: none;
+    display: none !important;
 }
 
 button{
     border: none;
     background: transparent;
+}
+
+div.centered{
+    max-width: 480px;
+    width: auto;
+    margin:auto;
+
+    color: black;
+
+    background: #efefef;
+    border-radius: 10px;
+    padding: 2rem 1rem 2rem 2rem;
+    text-align: center;
+    line-height: 2rem;
 }
 
 
@@ -127,9 +141,14 @@ div#ivr_enter_room{
     display: flex;
     margin-top: 2rem;
 }
+div#ivr_enter_room span#loader{
+    flex: 0 0 5%;
+    padding-top: 0.5rem;
+    margin-left: 0.5rem;
+}
 div#ivr_enter_room span#ivr_enter_room_label{
     background: #adadad;
-    flex: 0 0 70%;
+    flex: 0 0 65%;
 }
 div#ivr_enter_room span#ivr_enter_room_button{
     flex: 1;
@@ -143,41 +162,39 @@ div#ivr_enter_room span#ivr_enter_room_button{
     cursor: pointer;
     box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.3);
     padding-top: 1px;
+    max-width: 8rem;
 }
 div#ivr_enter_room span#ivr_enter_room_button button{
     margin-left: 0;
+    padding-top: 0.8rem;
     padding-left: 0;
     color: #FFF;
     font-weight: 600;
     font-size: large;
 }
 div#ivr_enter_room span#ivr_enter_room_label{
+    height: 3rem;
     border:none;
     box-shadow: -1px 2px 5px 1px rgb(0 0 0 / 30%);
 }
 div#ivr_enter_room span#ivr_enter_room_label input{
     border:none;
     width: 100%;
-    height: 2rem;
+    height: 3rem;
     letter-spacing: 1em;
+    padding-left: 1em;
 }
 div#ivr_enter_room span#ivr_enter_room_label input:focus-visible{
     border:none;
     outline:none;
 }
 
-div.centered{
-    max-width: 480px;
-    width: auto;
-    margin:auto;
 
-    color: black;
-
-    background: #efefef;
-    border-radius: 10px;
-    padding: 2rem;
-    text-align: center;
-    line-height: 2rem;
+#loader img{
+    animation-name: spin;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 
@@ -229,6 +246,27 @@ div#error_container span{
     }
     100% {
         -webkit-transform: translateX(0%);
+    }
+}
+
+
+
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes slide-out {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
     }
 }
 

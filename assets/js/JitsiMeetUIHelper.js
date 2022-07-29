@@ -72,40 +72,37 @@ export default class JitsiMeetUIHelper {
      */
     constructor() {
         // IFrame already initialised
-        if (window.JitsiMeetUIHelper !== undefined) return;
+        if (window.JitsiMeetUIHelper !== undefined) return window.JitsiMeetUIHelper;
 
         this.dtmfMenu = document.getElementById('dtmf_menu_content');
         this.dtmfMenuButton = document.getElementById('dtmf_show_menu_btn');
 
-        this.ivr = new IVR();
+        // Fetch config
+        fetch('config.json', {"method": "get"})
+            .then(response => {
+                response.json()
+                    .then(config => {
+                        Config.setDictionary(config);
 
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
+                        this.ivr = new IVR();
 
-        window.JitsiMeetUIHelper = this;
+                        const queryString = window.location.search;
+                        const urlParams = new URLSearchParams(queryString);
 
-        if (!urlParams.has('room_id')) {
-            this.onError('room_id', 'not_set');
+                        window.JitsiMeetUIHelper = this;
 
-        }else {
-            this.roomID = urlParams.get('room_id');
+                        if (!urlParams.has('room_id')) {
+                            this.onError('room_id', 'not_set');
 
-            // Update page title
-            document.title = this.roomID;
+                        }else {
+                            this.roomID = urlParams.get('room_id');
 
-            // Fetch config
-            fetch('config.json', {"method": "get"})
-                .then(response => {
-                    response.json()
-                        .then(config => {
-                            for (let i in Config.get('*')) {
-                                if (config.hasOwnProperty(i)) {
-                                    Config.set(i, config[i]);
-                                }
-                            }
+                            // Update page title
+                            document.title = this.roomID;
+
 
                             // If TTS disabled, hide on UI
-                            if (!Config.get('enable_tts')) {
+                            if (!TTS.enabled()) {
                                 document.querySelector('div[data-content="tts"]').classList.add('hide');
                             }
 
@@ -117,28 +114,37 @@ export default class JitsiMeetUIHelper {
                                 Lang.changeLocal(lang);
 
                             // init the room
-                            let context = this;
-                            this.room = new Room(this.roomID);
-                            this.room.initJitsiMeetConference()
-                                .then(function(){
-                                    context.#toggleMenu(true, true);
-                                    document.getElementById('dtmf_show_menu')
-                                        .classList.remove('hidden')
+                            this.initRoom();
+                        }
+                    })
+                    .catch(error => {
+                        throw new Error(error);
+                    })
+            })
+            .catch(error => {
+                throw new Error(error);
+            })
+    }
 
-                                }).catch(function (){
-                                    context.#toggleMenu(false, false);
-                                    document.getElementById('dtmf_show_menu')
-                                        .classList.add('hidden')
-                                });
-                        })
-                        .catch(error => {
-                            throw new Error(error);
-                        })
-                })
-                .catch(error => {
-                    throw new Error(error);
-                })
-        }
+    /**
+     * Init room
+     */
+    initRoom(){
+        let context = this;
+        this.room = new Room(this.roomID);
+        document.querySelectorAll('.header-logo').forEach(function(element){
+            element.classList.add('hidden');
+        })
+
+        this.room.initJitsiMeetConference()
+            .then(function () {
+                context.#toggleMenu(true, true);
+                document.getElementById('dtmf_show_menu').classList.remove('hidden')
+
+            }).catch(function () {
+                context.#toggleMenu(false, false);
+                document.getElementById('dtmf_show_menu').classList.add('hidden')
+            });
     }
 
 
@@ -160,7 +166,7 @@ export default class JitsiMeetUIHelper {
                     return;
 
                 case 'toggle-tts':
-                    Config.set('enable_tts', !Config.get('enable_tts'));
+                    Config.set('tts.enabled', !Config.get('tts.enabled'));
                     break;
 
                 case 'toggle-audio':
@@ -238,20 +244,34 @@ export default class JitsiMeetUIHelper {
             case 'room_id':
                 if (reason === 'not_set') {
                     // Room id not provided, show IVR UI
-                    if (Config.get('enable_ivr')){
+                    if (this.ivr.enabled() === true) {
                         this.ivr.show();
-                    }else{
-                        this.renderError('room_id_not_set');
+                        return
                     }
                 }
+                this.renderError('ivr_disabled');
                 break;
+
             default:
                 console.error(`[Error] ${element} / ${reason}`)
+                this.renderError(element);
         }
     }
 
 
+    /**
+     * Render error
+     * For now, just show a default error message
+     *
+     * @param reason
+     */
     renderError(reason){
+        switch (reason){
+            case 'ivr_disabled':
+            default:
+                document.getElementById('errors').classList.remove('hidden')
+                console.error(`[Error] ${reason}`)
+        }
 
     }
 
@@ -261,7 +281,7 @@ export default class JitsiMeetUIHelper {
      * @param text
      */
     speak(text){
-        if (Config.get('enable_tts')){
+        if (TTS.enabled()){
             TTS.speak(text);
         }
     }

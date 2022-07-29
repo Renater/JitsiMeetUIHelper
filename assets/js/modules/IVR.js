@@ -1,45 +1,101 @@
-import Config from './Config';
+import Config from './Config.js';
+import JitsiMeetUIHelper from '../JitsiMeetUIHelper.js';
 
 /**
  * Class IVR
  */
 export default class IVR {
 
+    /**
+     * Input room ID
+     * @type {null|Number}
+     */
     inputRoomID = null;
+
+    /**
+     * Open room button
+     *
+     * @type {HTMLElement|null}
+     */
     enterRoomBtn = null;
-    container = null;
+
+    /**
+     * Main IVR container
+     * @type {HTMLElement|null}
+     */
+    mainIvrContainer = null;
+
+    /**
+     * Room ID typed by user
+     * @type {String}
+     */
     roomID = "";
 
+    /**
+     * Loader
+     *
+     * @type {HTMLElement|null}
+     */
+    loader = null;
+
+
+    /**
+     * IVR constructor
+     */
     constructor() {
         // IVR disabled in config
-        if (!Config.get('enable_ivr')) return;
+        if (!this.enabled()) return;
 
+        // Init UI elements
         this.inputRoomID = document.getElementById('input_room_id');
-        this.container = document.getElementById('ivr_container');
+        this.mainIvrContainer = document.getElementById('ivr_container');
         this.enterRoomBtn = document.getElementById('btn_enter_room');
+        this.loader = document.getElementById('loader');
 
         let context = this;
 
+        // Listen to keydown events on input
         this.inputRoomID.addEventListener('keydown', function (event){
             context.onKeydown(event);
         })
 
-        this.enterRoomBtn.addEventListener('click', function (event){
+        // Listen to click on enter room button
+        this.enterRoomBtn.addEventListener('click', function (){
             context.enterRoom();
         })
     }
 
-    show(){
-        this.container.classList.remove('hidden');
+    /**
+     * Return true if IVR is enabled in config
+     *
+     * @returns {boolean}
+     */
+    enabled(){
+        return Config.get('ivr.enabled') === true;
     }
 
+    /**
+     * Show IVR main container
+     */
+    show(){
+        this.mainIvrContainer.classList.remove('hidden');
+    }
+
+    /**
+     * Hide IVR main container
+     */
     hide(){
-        this.container.classList.add('hidden');
+        this.mainIvrContainer.classList.add('hidden');
     }
 
 
     /* Listeners */
 
+    /**
+     * Get user input
+     *
+     * @param event
+     */
     onKeydown(event){
         if (event.key === '#'){
             // Enter room
@@ -85,8 +141,32 @@ export default class IVR {
             this.onError('room_id_too_short')
         }else {
             // Get conference room_id
-            // let url = `${Config.get('domain')}`;
-            // let conference =
+            let url = Config.get('ivr.confmapper_url')+Config.get('ivr.confmapper_endpoint');
+            let context = this;
+            let helper = new JitsiMeetUIHelper();
+
+            let onError= function(reason){
+                document.getElementById('ivr_container').classList.add('hidden');
+                helper.onError('room_id', reason);
+            };
+
+            this.loader.classList.remove('hidden');
+
+            fetch(`${url}?id=${this.roomID}`, {method: 'get',})
+                .then(response => {
+                    response.json()
+                        .then(function (data) {
+                            if (data.hasOwnProperty('conference')){
+                                context.loader.classList.remove('hidden')
+
+                                document.getElementById('ivr_container').classList.add('hidden');
+
+                                helper.roomID = data.conference;
+                                helper.initRoom();
+                            }
+                        })
+                        .catch(onError);
+                }).catch(onError);
         }
     }
 }

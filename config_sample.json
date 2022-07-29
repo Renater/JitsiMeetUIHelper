@@ -1,9 +1,15 @@
 {
   "lang": "fr",
   "domain": "https://rendez-vous.renater.fr",
-  "enable_tts": true,
-  "enable_ivr": true,
   "auto_hide_menu_timer": 10,
+  "tts": {
+    "enabled": true
+  },
+  "ivr": {
+    "enabled": true,
+    "confmapper_url": "https://195.98.238.9/",
+    "confmapper_endpoint": "conferenceMapper"
+  },
   "shortcuts":{
     "show-dtmf-menu": "h",
     "toggle-audio": "m",

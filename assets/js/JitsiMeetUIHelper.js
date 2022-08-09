@@ -3,6 +3,7 @@ import Config from './modules/Config.js';
 import Lang from './modules/Lang.js';
 import TTS from './modules/TTS.js';
 import Room from './modules/Room.js';
+import Utils from './modules/Utils.js';
 
 /**
  * Class JitsiMeetUIHelper
@@ -74,11 +75,13 @@ export default class JitsiMeetUIHelper {
         // IFrame already initialised
         if (window.JitsiMeetUIHelper !== undefined) return window.JitsiMeetUIHelper;
 
+        window.JitsiMeetUIHelper = this;
+
         this.dtmfMenu = document.getElementById('dtmf_menu_content');
         this.dtmfMenuButton = document.getElementById('dtmf_show_menu_btn');
 
         // Fetch config
-        fetch('config.json', {"method": "get"})
+        Utils.fetchWithTimeout('config.json', {"method": "get"})
             .then(response => {
                 response.json()
                     .then(config => {
@@ -88,8 +91,6 @@ export default class JitsiMeetUIHelper {
 
                         const queryString = window.location.search;
                         const urlParams = new URLSearchParams(queryString);
-
-                        window.JitsiMeetUIHelper = this;
 
                         if (!urlParams.has('room_id')) {
                             this.onError('room_id', 'not_set');
@@ -240,6 +241,16 @@ export default class JitsiMeetUIHelper {
      * @param reason
      */
     onError(element, reason) {
+        if (reason instanceof Object) {
+            if (reason.hasOwnProperty('error')){
+                 reason = reason.error;
+            }else{
+                reason = JSON.stringify(reason);
+            }
+        }
+
+        console.error(`[Error] ${element} / ${reason}`)
+
         switch (element) {
             case 'room_id':
                 if (reason === 'not_set') {
@@ -248,13 +259,14 @@ export default class JitsiMeetUIHelper {
                         this.ivr.show();
                         return
                     }
+                }else if (reason === 'Provided number is not valid'){
+                    reason = 'conference_not_found';
                 }
-                this.renderError(reason);
+                this.renderError(element, reason);
                 break;
 
             default:
-                console.error(`[Error] ${element} / ${reason}`)
-                this.renderError(element);
+                this.renderError(element, reason);
         }
     }
 
@@ -263,18 +275,18 @@ export default class JitsiMeetUIHelper {
      * Render error
      * For now, just show a default error message
      *
+     * @param element
      * @param reason
      */
-    renderError(reason){
+    renderError(element, reason){
         let ctn = document.getElementById('errors');
         ctn.classList.remove('hidden');
 
         let reasonHtml = ctn.querySelector('span[data-content="reason"]');
 
-        switch (reason){
-            case 'room_id_too_short':
-                reasonHtml.innerHTML = Lang.translate(reason);
-
+        switch (element){
+            case 'room_id':
+                reasonHtml.innerHTML = Lang.has(reason) ? Lang.translate(reason) : reason;
                 break;
             case 'ivr_disabled':
             default:

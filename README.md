@@ -21,25 +21,29 @@ Copy the **config_sample.json** to **config.json** at the root of your app.
 
 Available parameters:
 
-| Key                        | Description                                           | Mandatory | Default value |
-|----------------------------|-------------------------------------------------------|:---------:|---------------|
-| lang                       | Lang used by TTS (browser embedded Text To Speech)    |     x     | fr            |
-| domain                     | Domain to initiate the room                           |     x     | undefined     |
-| auto_hide_menu_timer       | Automatically hide menu after this timer (in seconds) |     x     | 10            |
-| tts                        | TTS configurations (Text To Speech)                   |           |               |
-| tts.enabled                | Enable / disable TTS                                  |           |               |
-| ivr                        | IVR configurations                                    |           | true          |
-| ivr.enabled                | Enable / disable IVR                                  |           | false         |
-| ivr.confmapper_url         | Confmapper URL                                        |           | false         |
-| ivr.confmapper_endpoint    | Confmapper endpoint                                   |           | false         |
-| shortcuts                  | List of keyboard shortcuts (lower case)               |           |               |
-| shortcuts.show-dtmf-menu   | Show / hide menu                                      |           | h             |
-| shortcuts.toggle-audio     | Mute / unmute audio                                   |           | m             |
-| shortcuts.toggle-video     | Mute / unmute video                                   |           | v             |
-| shortcuts.toggle-chat      | Show / hide chat'                                     |           | c             |
-| shortcuts.toggle-tile-view | Show / hide tile view                                 |           | w             |
-| shortcuts.toggle-rise-hand | Rise / down hand                                      |           | r             |
-| shortcuts.toggle-tts       | Enable / disable TTS (Text To Speech)                 |           | x             |
+| Key                            | Description                                           | Mandatory | Default value |
+|--------------------------------|-------------------------------------------------------|:---------:|---------------|
+| lang                           | Lang used by TTS (browser embedded Text To Speech)    |     x     | fr            |
+| domain                         | Domain to initiate the room                           |     x     | undefined     |
+| auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds) |     x     | 10            |
+| tts                            | TTS configurations (Text To Speech)                   |           |               |
+| tts.enabled                    | Enable / disable TTS                                  |           |               |
+| ivr                            | IVR configurations                                    |           | true          |
+| ivr.enabled                    | Enable / disable IVR                                  |           | false         |
+| ivr.confmapper_url             | Confmapper URL                                        |           | false         |
+| ivr.confmapper_endpoint        | Confmapper endpoint                                   |           | false         |
+| ivr.confmapper_timeout         | Request timeout                                       |           | false         |
+| ivr.conference_code            | Configuration for conference code                     |           | false         |
+| ivr.conference_code.min_length | Conference code minimal length                        |           | false         |
+| ivr.conference_code.max_length | Conference code maximal length                        |           | false         |
+| shortcuts                      | List of keyboard shortcuts (lower case)               |           |               |
+| shortcuts.show-dtmf-menu       | Show / hide menu                                      |           | h             |
+| shortcuts.toggle-audio         | Mute / unmute audio                                   |           | m             |
+| shortcuts.toggle-video         | Mute / unmute video                                   |           | v             |
+| shortcuts.toggle-chat          | Show / hide chat'                                     |           | c             |
+| shortcuts.toggle-tile-view     | Show / hide tile view                                 |           | w             |
+| shortcuts.toggle-rise-hand     | Rise / down hand                                      |           | r             |
+| shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                 |           | x             |
 
  
 

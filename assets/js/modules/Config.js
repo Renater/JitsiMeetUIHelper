@@ -1,3 +1,4 @@
+
 /**
  * Basic config handler class
  */
@@ -68,12 +69,7 @@ export default class Config {
         if (len === 1){
             this.parameters[parameter] = value;
         }else {
-            path.forEach(function (element) {
-                if (!params[element]) params[element] = {};
-                params = params[element];
-            });
-
-            params[path[len - 1]] = value;
+            _.set(this.parameters, parameter, value);
         }
     }
 

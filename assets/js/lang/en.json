@@ -14,6 +14,7 @@
         "hand_raised": "Hand raised",
         "hand_down": "Hand down",
         "room_id_too_short": "Conference number too short",
-        "cannot_initialise_conference": "Cannot initialise your conference."
+        "cannot_initialise_conference": "Cannot initialise your conference.",
+        "conference_not_found": "Conference not found"
     }
 }

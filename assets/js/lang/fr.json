@@ -14,6 +14,7 @@
         "hand_raised": "Main levée",
         "hand_down": "Main baissée",
         "room_id_too_short": "Numéro de conférence trop court",
-        "cannot_initialise_conference": "Impossible d'initialiser votre conférence."
+        "cannot_initialise_conference": "Impossible d'initialiser votre conférence.",
+        "conference_not_found": "Conférence introuvable"
     }
 }

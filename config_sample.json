@@ -9,6 +9,7 @@
     "enabled": true,
     "confmapper_url": "https://195.98.238.9/",
     "confmapper_endpoint": "conferenceMapper",
+    "confmapper_timeout": 5000,
     "conference_code": {
       "min_length": 4,
       "max_length": 8

@@ -17,7 +17,12 @@ export default class Config {
         "ivr": {
             "enabled": false,
             "confmapper_url": null,
-            "confmapper_endpoint": null
+            "confmapper_endpoint": null,
+            "confmapper_timeout": 5000,
+            "conference_code": {
+                "min_length": 2,
+                "max_length": 10
+            }
         },
         "shortcuts": {
             "show-dtmf-menu": "h",
@@ -63,7 +68,6 @@ export default class Config {
      * @param value
      */
     static set(parameter, value) {
-        let params = this.parameters;
         let path = parameter.split('.')
         let len = path.length;
         if (len === 1){

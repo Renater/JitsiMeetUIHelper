@@ -51,7 +51,7 @@ Available parameters:
 
 To make it work, the user have to specify the **room_id** (ie. the Jitsi Meet conference name);
 
-To do this, the URL must contains the parameter "room_id=XXXX";
+To do this, the URL must contain the parameter "room_id=XXXX";
 
 Example: 
 

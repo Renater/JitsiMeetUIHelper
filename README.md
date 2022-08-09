@@ -31,11 +31,11 @@ Available parameters:
 | ivr                            | IVR configurations                                    |           | true          |
 | ivr.enabled                    | Enable / disable IVR                                  |           | false         |
 | ivr.confmapper_url             | Confmapper URL                                        |           | false         |
-| ivr.confmapper_endpoint        | Confmapper endpoint                                   |           | false         |
+| ivr.confmapper_endpoint        | Confmapper endpoint                                   |           | 5000          |
 | ivr.confmapper_timeout         | Request timeout                                       |           | false         |
-| ivr.conference_code            | Configuration for conference code                     |           | false         |
-| ivr.conference_code.min_length | Conference code minimal length                        |           | false         |
-| ivr.conference_code.max_length | Conference code maximal length                        |           | false         |
+| ivr.conference_code            | Configuration for conference code                     |           |               |
+| ivr.conference_code.min_length | Conference code minimal length                        |           | 2             |
+| ivr.conference_code.max_length | Conference code maximal length                        |           | 10            |
 | shortcuts                      | List of keyboard shortcuts (lower case)               |           |               |
 | shortcuts.show-dtmf-menu       | Show / hide menu                                      |           | h             |
 | shortcuts.toggle-audio         | Mute / unmute audio                                   |           | m             |

@@ -40,6 +40,16 @@ export default class Lang {
         }
     }
 
+    /**
+     * Check if asked key has translation on dictionary
+     *
+     * @param key
+     * @returns {boolean}
+     */
+    static has(key){
+        return this.dictionary.hasOwnProperty(this.langCode) && this.dictionary[this.langCode].hasOwnProperty(key)
+    }
+
 
     /**
      * Init current dictionary

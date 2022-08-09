@@ -7,6 +7,7 @@
 
     <script type="module" src="assets/js/app.js"></script>
     <script type="text/javascript" src="https://rdv42.rendez-vous.renater.fr/external_api.js"></script>
+    <script type="text/javascript" src='assets/lib/lodash/lodash.js'></script>
 
     <link type="text/css" rel="stylesheet" href="assets/css/app.css">
 </head>
@@ -27,7 +28,7 @@
             </div>
             <div id="ivr_enter_room">
                 <span id="ivr_enter_room_label">
-                    <input type="text" id="input_room_id" />
+                        <input type="text" id="input_room_id" autocomplete="off" />
                 </span>
                 <span id="ivr_enter_room_button">
                     <button id="btn_enter_room">Entrer</button>
@@ -43,7 +44,7 @@
         <div id="error_container" class="centered">
             <div class="header">
                 <img src="assets/images/smiley-sad.svg" width="32" height="32">
-                <span>Impossible d'initialiser votre conférence.</span>
+                <span data-content="reason"></span>
             </div>
         </div>
     </div>

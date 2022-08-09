@@ -249,7 +249,7 @@ export default class JitsiMeetUIHelper {
                         return
                     }
                 }
-                this.renderError('ivr_disabled');
+                this.renderError(reason);
                 break;
 
             default:
@@ -266,11 +266,20 @@ export default class JitsiMeetUIHelper {
      * @param reason
      */
     renderError(reason){
+        let ctn = document.getElementById('errors');
+        ctn.classList.remove('hidden');
+
+        let reasonHtml = ctn.querySelector('span[data-content="reason"]');
+
         switch (reason){
+            case 'room_id_too_short':
+                reasonHtml.innerHTML = Lang.translate(reason);
+
+                break;
             case 'ivr_disabled':
             default:
-                document.getElementById('errors').classList.remove('hidden')
-                console.error(`[Error] ${reason}`)
+                reasonHtml.innerHTML = Lang.translate('cannot_initialise_conference');
+                console.error(`[Error] ${reason}`);
         }
 
     }

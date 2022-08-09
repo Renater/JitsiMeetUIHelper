@@ -154,7 +154,10 @@ export default class Room {
      * @param args
      */
     executeCommand(name, ...args) {
-        if (!(name in this.commands)) {
+        if (!this.jitsiApiClient) {
+            console.error('Room not initialised');
+
+        }else if (!(name in this.commands)) {
             console.error(`[Error] Command '${name}' not found`)
 
         } else {

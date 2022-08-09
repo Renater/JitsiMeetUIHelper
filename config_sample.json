@@ -8,7 +8,11 @@
   "ivr": {
     "enabled": true,
     "confmapper_url": "https://195.98.238.9/",
-    "confmapper_endpoint": "conferenceMapper"
+    "confmapper_endpoint": "conferenceMapper",
+    "conference_code": {
+      "min_length": 4,
+      "max_length": 8
+    }
   },
   "shortcuts":{
     "show-dtmf-menu": "h",

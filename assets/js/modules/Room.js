@@ -73,7 +73,11 @@ export default class Room {
                     startWithVideoMuted: false,
                     p2p: {enabled: true},
                     desktopSharingChromeDisabled: true,
-                    disableShortcuts: true
+                    disableShortcuts: true,
+                    buttonsWithNotifyClick:[
+                        'hangup'
+                    ]
+
                 },
                 parentNode: mainContainer,
             }
@@ -120,6 +124,7 @@ export default class Room {
             }
         );
 
+
         // Hide / show tile view
         this.jitsiApiClient.addListener('tileViewChanged', function (response) {
                 TTS.speak(Lang.translate(response.enabled ? 'tile_view_shown' : 'tile_view_hidden'));
@@ -129,6 +134,14 @@ export default class Room {
         // Hand rise / down
         this.jitsiApiClient.addListener('raiseHandUpdated', function (response) {
                 TTS.speak(Lang.translate(response.handRaised ? 'hand_raised' : 'hand_down'));
+            }
+        );
+
+        // Hangup, go to IVR root page
+        this.jitsiApiClient.addListener('toolbarButtonClicked', function (response) {
+                if (response.key === 'hangup'){
+                    window.location.replace('/');
+                }
             }
         );
     }

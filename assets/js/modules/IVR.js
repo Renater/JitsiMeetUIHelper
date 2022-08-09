@@ -1,4 +1,5 @@
 import Config from './Config.js';
+import Utils from './Utils.js';
 import JitsiMeetUIHelper from '../JitsiMeetUIHelper.js';
 
 /**
@@ -141,13 +142,8 @@ export default class IVR {
     onError(reason){
         switch (reason){
             case 'room_id_too_short':
-                console.log('Room ID too short')
-                this.helper.renderError(reason);
-
-                break;
-
             default:
-
+                this.helper.onError('room_id', reason);
                 break;
         }
     }
@@ -175,7 +171,7 @@ export default class IVR {
 
             this.loader.classList.remove('hidden');
 
-            fetch(`${url}?id=${this.roomID}`, {method: 'get',})
+            Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
                 .then(response => {
                     response.json()
                         .then(function (data) {
@@ -186,6 +182,8 @@ export default class IVR {
 
                                 context.helper.roomID = data.conference;
                                 context.helper.initRoom();
+                            }else{
+                                onError(data);
                             }
                         })
                         .catch(onError);

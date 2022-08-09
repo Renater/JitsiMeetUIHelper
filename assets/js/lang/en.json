@@ -12,6 +12,8 @@
         "tile_view_shown": "Tile view shown",
         "tile_view_hidden": "Tile view hidden",
         "hand_raised": "Hand raised",
-        "hand_down": "Hand down"
+        "hand_down": "Hand down",
+        "room_id_too_short": "Conference number too short",
+        "cannot_initialise_conference": "Cannot initialise your conference."
     }
 }

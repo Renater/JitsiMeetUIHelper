@@ -12,6 +12,8 @@
         "tile_view_shown": "Vue mosaïque affichée",
         "tile_view_hidden": "Vue mosaïque masquée",
         "hand_raised": "Main levée",
-        "hand_down": "Main baissée"
+        "hand_down": "Main baissée",
+        "room_id_too_short": "Numéro de conférence trop court",
+        "cannot_initialise_conference": "Impossible d'initialiser votre conférence."
     }
 }

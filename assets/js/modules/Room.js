@@ -10,7 +10,7 @@ export default class Room {
     /**
      * JitsiMeetExternalAPI instance
      *
-     * @type {Object|null}
+     * @type {JitsiMeetExternalAPI|null}
      */
     jitsiApiClient = null;
 
@@ -28,7 +28,7 @@ export default class Room {
      * @param roomID
      */
     constructor(roomID) {
-        if (!roomID.length){
+        if (!roomID){
             throw new Error ('Room ID not set');
         }else{
             this.roomID = roomID;

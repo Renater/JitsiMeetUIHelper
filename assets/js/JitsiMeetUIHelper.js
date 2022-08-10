@@ -13,9 +13,10 @@ export default class JitsiMeetUIHelper {
     /**
      * Room ID
      *
-     * @type {string|null}
+     * @type {string|number|null}
      */
     roomID = null;
+
 
     /**
      * the DTMF menu
@@ -64,7 +65,7 @@ export default class JitsiMeetUIHelper {
     /**
      * IVR
      *
-     * @type {*}
+     * @type {*|IVR}
      */
     ivr = null;
 
@@ -89,34 +90,31 @@ export default class JitsiMeetUIHelper {
 
                         this.ivr = new IVR();
 
-                        const queryString = window.location.search;
-                        const urlParams = new URLSearchParams(queryString);
-
-                        if (!urlParams.has('room_id')) {
-                            this.onError('room_id', 'not_set');
-
-                        }else {
-                            this.roomID = urlParams.get('room_id');
-
-                            // Update page title
-                            document.title = this.roomID;
+                        this.initRoomIDFromURL();
 
 
-                            // If TTS disabled, hide on UI
-                            if (!TTS.enabled()) {
-                                document.querySelector('div[data-content="tts"]').classList.add('hide');
-                            }
-
-                            this.menuTimer = Config.get('auto_hide_menu_timer');
-
-                            // Update locale
-                            let lang = Config.get('lang');
-                            if (lang)
-                                Lang.changeLocal(lang);
-
-                            // init the room
-                            this.initRoom();
+                        // If TTS disabled, hide on UI
+                        if (!TTS.enabled()) {
+                            document.querySelector('div[data-content="tts"]').classList.add('hide');
                         }
+
+                        this.menuTimer = Config.get('auto_hide_menu_timer');
+
+                        // Update page title
+                        if (this.roomID)
+                            document.title = this.roomID;
+                        else
+                            document.title = this.constructor.name;
+
+
+                        // Update locale
+                        let lang = Config.get('lang');
+                        if (lang)
+                            Lang.changeLocal(lang);
+
+                        // init the room
+                        if (this.roomID)
+                            this.initRoom();
                     })
                     .catch(error => {
                         throw new Error(error);
@@ -127,25 +125,62 @@ export default class JitsiMeetUIHelper {
             })
     }
 
+    initRoomIDFromURL(){
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+
+        if (!urlParams.has('room_id')) {
+            this.onError('room_id', 'not_set');
+
+        }else {
+            let roomIDFromURL = urlParams.get('room_id');
+
+            // Set roomID pattern
+            if (roomIDFromURL !== null) {
+                const minLength = Config.get('ivr.conference_code.min_length');
+                const maxLength = Config.get('ivr.conference_code.max_length');
+                const num = Number(roomIDFromURL);
+                if (!Number.isInteger(num)){
+                    this.onError('room_id', 'bad_format')
+                }else{
+                    const len = Math.ceil(Math.log(roomIDFromURL + 1) / Math.LN10) -1;
+                    if (len < minLength || len > maxLength){
+                        this.onError('room_id', 'bad_format')
+                    }else{
+                        this.roomID = num;
+                        this.ivr.setRoomID(num);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Init room
      */
     initRoom(){
-        let context = this;
         this.room = new Room(this.roomID);
-        document.querySelectorAll('.header-logo').forEach(function(element){
-            element.classList.add('hidden');
-        })
+        // document.querySelectorAll('.header-logo').forEach(function(element){
+        //     element.classList.add('hidden');
+        // })
 
-        this.room.initJitsiMeetConference()
-            .then(function () {
-                context.#toggleMenu(true, true);
-                document.getElementById('dtmf_show_menu').classList.remove('hidden')
+        if (this.roomID !== null){
+            this.ivr.roomID = this.roomID;
+            this.ivr.enterRoom();
+        }
+    }
 
-            }).catch(function () {
-                context.#toggleMenu(false, false);
-                document.getElementById('dtmf_show_menu').classList.add('hidden')
-            });
+
+    initJitsiMeetConference() {
+        let context = this;
+        this.room.initJitsiMeetConference().then(function () {
+            context.#toggleMenu(true, true);
+            document.getElementById('dtmf_show_menu').classList.remove('hidden')
+
+        }).catch(function () {
+            context.#toggleMenu(false, false);
+            document.getElementById('dtmf_show_menu').classList.add('hidden')
+        });
     }
 
 
@@ -259,6 +294,9 @@ export default class JitsiMeetUIHelper {
                         this.ivr.show();
                         return
                     }
+                }else if (reason === 'bad_format'){
+                    reason = `${element}_${reason}`;
+
                 }else if (reason === 'Provided number is not valid'){
                     reason = 'conference_not_found';
                 }

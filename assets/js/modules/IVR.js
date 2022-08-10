@@ -93,6 +93,16 @@ export default class IVR {
     }
 
     /**
+     * Set room ID (ui side included)
+     *
+     * @param roomID
+     */
+    setRoomID(roomID){
+        this.roomID = roomID;
+        this.inputRoomID.value = roomID;
+    }
+
+    /**
      * Show IVR main container
      */
     show(){
@@ -125,7 +135,7 @@ export default class IVR {
 
         }else if (event.key === 'Backspace'){
             // Remove last digit
-            this.roomID = this.roomID.slice(0, -1)
+            this.roomID = this.roomID.slice(0, -1);
 
         }else{
             event.preventDefault();
@@ -157,6 +167,7 @@ export default class IVR {
         }else {
             // Hide previous errors
             document.getElementById('errors').classList.add('hidden');
+            this.mainIvrContainer.classList.remove('hidden');
 
             // Get conference room_id
             let url = Config.get('ivr.confmapper_url')+Config.get('ivr.confmapper_endpoint');
@@ -173,20 +184,22 @@ export default class IVR {
 
             Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
                 .then(response => {
-                    response.json()
-                        .then(function (data) {
-                            if (data.hasOwnProperty('conference')){
-                                context.loader.classList.remove('hidden')
-
-                                document.getElementById('ivr_container').classList.add('hidden');
-
-                                context.helper.roomID = data.conference;
-                                context.helper.initRoom();
-                            }else{
-                                onError(data);
-                            }
-                        })
-                        .catch(onError);
+                    try {
+                        response.json()
+                            .then(function (data) {
+                                if (data.hasOwnProperty('conference')) {
+                                    context.mainIvrContainer.classList.add('hidden');
+                                    context.helper.roomID = data.conference;
+                                    context.helper.initJitsiMeetConference();
+                                    document.querySelector('div[class="header-logo"]').classList.add('hidden');
+                                } else {
+                                    onError(data);
+                                }
+                            })
+                            .catch(onError);
+                    }catch (e){
+                        console.error('response_not_json');
+                    }
                 }).catch(onError);
         }
     }

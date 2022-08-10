@@ -15,6 +15,8 @@
         "hand_down": "Hand down",
         "room_id_too_short": "Conference number too short",
         "cannot_initialise_conference": "Cannot initialise your conference.",
-        "conference_not_found": "Conference not found"
+        "conference_not_found": "Conference not found",
+        "room_id_bad_format": "Invalid conference code format",
+        "timeout": "Request timeout"
     }
 }

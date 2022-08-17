@@ -7,7 +7,7 @@
   },
   "ivr": {
     "enabled": true,
-    "confmapper_url": "https://195.98.238.9/",
+    "confmapper_url": "https://rendez-vous.renater.fr/conf-api/",
     "confmapper_endpoint": "conferenceMapper",
     "confmapper_timeout": 5000,
     "conference_code": {

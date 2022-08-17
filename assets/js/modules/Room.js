@@ -28,9 +28,7 @@ export default class Room {
      * @param roomID
      */
     constructor(roomID) {
-        if (!roomID){
-            throw new Error ('Room ID not set');
-        }else{
+        if (roomID){
             this.roomID = roomID;
         }
     }

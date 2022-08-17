@@ -81,6 +81,8 @@ export default class JitsiMeetUIHelper {
         this.dtmfMenu = document.getElementById('dtmf_menu_content');
         this.dtmfMenuButton = document.getElementById('dtmf_show_menu_btn');
 
+        this.room = new Room();
+
         // Fetch config
         Utils.fetchWithTimeout('config.json', {"method": "get"})
             .then(response => {
@@ -112,9 +114,10 @@ export default class JitsiMeetUIHelper {
                         if (lang)
                             Lang.changeLocal(lang);
 
-                        // init the room
+                        // try to enter the room
                         if (this.roomID)
-                            this.initRoom();
+                            this.ivr.roomID = this.roomID;
+                            this.ivr.enterRoom();
                     })
                     .catch(error => {
                         throw new Error(error);
@@ -173,6 +176,7 @@ export default class JitsiMeetUIHelper {
 
     initJitsiMeetConference() {
         let context = this;
+        this.room.roomID = context.roomID.split('@')[0];
         this.room.initJitsiMeetConference().then(function () {
             context.#toggleMenu(true, true);
             document.getElementById('dtmf_show_menu').classList.remove('hidden')

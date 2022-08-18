@@ -81,8 +81,6 @@ export default class JitsiMeetUIHelper {
         this.dtmfMenu = document.getElementById('dtmf_menu_content');
         this.dtmfMenuButton = document.getElementById('dtmf_show_menu_btn');
 
-        this.room = new Room();
-
         // Fetch config
         Utils.fetchWithTimeout('config.json', {"method": "get"})
             .then(response => {
@@ -92,8 +90,9 @@ export default class JitsiMeetUIHelper {
 
                         this.ivr = new IVR();
 
-                        this.initRoomIDFromURL();
+                        this.initRoomFromURL();
 
+                        this.room = new Room(this.roomID, this.displayName);
 
                         // If TTS disabled, hide on UI
                         if (!TTS.enabled()) {
@@ -128,9 +127,13 @@ export default class JitsiMeetUIHelper {
             })
     }
 
-    initRoomIDFromURL(){
+    initRoomFromURL(){
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
+
+        if (urlParams.has('display_name')) {
+            this.displayName = urlParams.get('display_name');
+        }
 
         if (!urlParams.has('room_id')) {
             this.onError('room_id', 'not_set');
@@ -155,7 +158,7 @@ export default class JitsiMeetUIHelper {
                     }
                 }
             }
-        }
+	}
     }
 
     /**

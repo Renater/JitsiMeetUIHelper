@@ -17,9 +17,16 @@ export default class Room {
     /**
      * Room identifier
      *
-     * @type {null|string}
+     * @type {string|null}
      */
     roomID = null;
+
+    /**
+     * Display Name
+     *
+     * @type {string|null}
+     */
+    displayName = null;
 
 
     /**
@@ -27,9 +34,12 @@ export default class Room {
      *
      * @param roomID
      */
-    constructor(roomID) {
+    constructor(roomID, displayName) {
         if (roomID){
             this.roomID = roomID;
+        }
+        if (displayName){
+            this.displayName = displayName
         }
     }
 
@@ -56,6 +66,9 @@ export default class Room {
             let mainContainer = document.getElementById('main_iframe_container');
             let mainOptions = {
                 roomName: this.roomID,
+		userInfo: {
+		    displayName: this.displayName
+		},
                 width: mainContainer.width,
                 height: mainContainer.height,
                 interfaceConfigOverwrite: {

@@ -69,6 +69,8 @@ export default class Room {
 		userInfo: {
 		    displayName: this.displayName
 		},
+		enableNoisyMicDetection: false,
+		prejoinPageEnabled: false,
                 width: mainContainer.width,
                 height: mainContainer.height,
                 interfaceConfigOverwrite: {

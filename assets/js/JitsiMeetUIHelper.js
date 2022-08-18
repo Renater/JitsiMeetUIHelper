@@ -150,8 +150,8 @@ export default class JitsiMeetUIHelper {
                     if (len < minLength || len > maxLength){
                         this.onError('room_id', 'bad_format')
                     }else{
-                        this.roomID = num;
-                        this.ivr.setRoomID(num);
+                        this.roomID = roomIDFromURL;
+                        this.ivr.setRoomID(roomIDFromURL);
                     }
                 }
             }

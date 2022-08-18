@@ -159,21 +159,8 @@ export default class JitsiMeetUIHelper {
     }
 
     /**
-     * Init room
+     * Init JitsiMeet conference
      */
-    initRoom(){
-        this.room = new Room(this.roomID);
-        // document.querySelectorAll('.header-logo').forEach(function(element){
-        //     element.classList.add('hidden');
-        // })
-
-        if (this.roomID !== null){
-            this.ivr.roomID = this.roomID;
-            this.ivr.enterRoom();
-        }
-    }
-
-
     initJitsiMeetConference() {
         let context = this;
         this.room.roomID = context.roomID.split('@')[0];

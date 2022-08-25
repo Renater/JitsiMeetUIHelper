@@ -182,25 +182,31 @@ export default class IVR {
 
             this.loader.classList.remove('hidden');
 
-            Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
-                .then(response => {
-                    try {
-                        response.json()
-                            .then(function (data) {
-                                if (data.hasOwnProperty('conference')) {
-                                    context.mainIvrContainer.classList.add('hidden');
-                                    context.helper.roomID = data.conference;
-                                    context.helper.initJitsiMeetConference();
-                                    document.querySelector('div[class="header-logo"]').classList.add('hidden');
-                                } else {
-                                    onError(data);
-                                }
-                            })
-                            .catch(onError);
-                    }catch (e){
-                        console.error('response_not_json');
-                    }
-                }).catch(onError);
+            if (url) {
+                Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
+                    .then(response => {
+                        try {
+                            response.json()
+                                .then(function (data) {
+                                    if (data.hasOwnProperty('conference')) {
+                                        context.mainIvrContainer.classList.add('hidden');
+                                        context.helper.roomID = data.conference;
+                                        context.helper.initJitsiMeetConference();
+                                        document.querySelector('div[class="header-logo"]').classList.add('hidden');
+                                    } else {
+                                        onError(data);
+                                    }
+                                })
+                                .catch(onError);
+                        }catch (e){
+                            console.error('response_not_json');
+                        }
+                    }).catch(onError);
+            } else {
+                context.mainIvrContainer.classList.add('hidden');
+                context.helper.initJitsiMeetConference();
+                document.querySelector('div[class="header-logo"]').classList.add('hidden');
+            }
         }
     }
 }

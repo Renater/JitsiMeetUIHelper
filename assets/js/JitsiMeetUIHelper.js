@@ -167,6 +167,10 @@ export default class JitsiMeetUIHelper {
     initJitsiMeetConference() {
         let context = this;
         this.room.roomID = context.roomID.split('@')[0];
+        let mappedDomain = context.roomID.split('@conference.')[1];
+        if (mappedDomain) {
+            Config.set('domain', `https://${mappedDomain}`);
+        }
         this.room.initJitsiMeetConference().then(function () {
             context.#toggleMenu(true, true);
             document.getElementById('dtmf_show_menu').classList.remove('hidden')

@@ -7,12 +7,12 @@
   },
   "ivr": {
     "enabled": true,
-    "confmapper_url": "https://rendez-vous.renater.fr/conf-api/",
-    "confmapper_endpoint": "conferenceMapper",
+    "confmapper_url": "",
+    "confmapper_endpoint": "",
     "confmapper_timeout": 5000,
     "conference_code": {
-      "min_length": 4,
-      "max_length": 8
+      "min_length": 2,
+      "max_length": 10
     }
   },
   "shortcuts":{

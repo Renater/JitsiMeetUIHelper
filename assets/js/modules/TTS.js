@@ -3,6 +3,13 @@ import Config from "./Config.js";
 export default class TTS {
 
     /**
+     * Voice to use
+     *
+     * @type {null|SpeechSynthesisVoice}
+     */
+    static voice = null;
+
+    /**
      * Return true if IVR is enabled in config
      *
      * @returns {boolean}
@@ -14,7 +21,7 @@ export default class TTS {
     /**
      * EXPERIMENTAL
      * Use browser embedded TTS
-     * @see https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesisUtterance
      *
      * @param text Text to be spoken
      */
@@ -22,7 +29,28 @@ export default class TTS {
         // Speak only if enabled in config
         if (text !== null) {
             let utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1;
+            if (TTS.voice !== null)
+                utterance.voice = TTS.voice;
+
             speechSynthesis.speak(utterance);
+        }
+    }
+
+    /**
+     * Init voices to use the best one
+     */
+    static initVoice(){
+        let lang = Config.get('lang');
+        lang = `${lang}-${lang.toUpperCase()}`;
+
+        let voices = window.speechSynthesis.getVoices();
+
+        for(let voice of voices){
+            if (voice.lang === lang){
+                TTS.voice = voice;
+                break;
+            }
         }
     }
 }

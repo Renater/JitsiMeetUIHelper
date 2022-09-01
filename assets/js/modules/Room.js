@@ -52,7 +52,7 @@ export default class Room {
         'toggle-video': 'toggleVideo',
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
-        'toggle-rise-hand': 'toggleRaiseHand',
+        'toggle-raise-hand': 'toggleRaiseHand',
     };
 
 
@@ -144,7 +144,7 @@ export default class Room {
             }
         );
 
-        // Hand rise / down
+        // Hand raise / down
         this.jitsiApiClient.addListener('raiseHandUpdated', function (response) {
                 TTS.speak(Lang.translate(response.handRaised ? 'hand_raised' : 'hand_down'));
             }
@@ -193,7 +193,7 @@ export default class Room {
                 case 'toggle-video':
                 case 'toggle-chat':
                 case 'toggle-tile-view':
-                case 'toggle-rise-hand':
+                case 'toggle-raise-hand':
                     // Send generic command to JitsiMeetExternalAPI
                     this.jitsiApiClient.executeCommand(this.commands[name], args);
                     break;

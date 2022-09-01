@@ -57,7 +57,7 @@ export default class JitsiMeetUIHelper {
         'toggle-video': 'toggleVideo',
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
-        'toggle-rise-hand': 'toggleRaiseHand',
+        'toggle-raise-hand': 'toggleRaiseHand',
         'toggle-tts': 'toggleTts'
     };
 
@@ -207,7 +207,7 @@ export default class JitsiMeetUIHelper {
                 case 'toggle-video':
                 case 'toggle-chat':
                 case 'toggle-tile-view':
-                case 'toggle-rise-hand':
+                case 'toggle-raise-hand':
                     this.room.executeCommand(name, args);
                     break;
 

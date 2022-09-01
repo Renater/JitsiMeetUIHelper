@@ -42,7 +42,7 @@ Available parameters:
 | shortcuts.toggle-video         | Mute / unmute video                                   |           | v             |
 | shortcuts.toggle-chat          | Show / hide chat'                                     |           | c             |
 | shortcuts.toggle-tile-view     | Show / hide tile view                                 |           | w             |
-| shortcuts.toggle-rise-hand     | Rise / down hand                                      |           | r             |
+| shortcuts.toggle-raise-hand     | raise / down hand                                      |           | r             |
 | shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                 |           | x             |
 
  
@@ -65,7 +65,7 @@ Here is the commands supported at the moment:
 * **toggle-video**: Toggle camera state
 * **toggle-chat**: Toggle chat' state
 * **toggle-tile-view**: Toggle use of tile view
-* **toggle-rise-hand**: Toggle hand rise/down
+* **toggle-raise-hand**: Toggle hand raise/down
 
 
 Example:

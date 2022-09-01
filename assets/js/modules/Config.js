@@ -30,7 +30,7 @@ export default class Config {
             "toggle-video": "v",
             "toggle-chat": "c",
             "toggle-tile-view": "w",
-            "toggle-rise-hand": "r",
+            "toggle-raise-hand": "r",
             "toggle-tts": "x"
         }
     };

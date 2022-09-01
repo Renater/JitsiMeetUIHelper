@@ -57,7 +57,7 @@ export default class JitsiMeetUIHelper {
         'toggle-video': 'toggleVideo',
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
-        'toggle-rise-hand': 'toggleRiseHand',
+        'toggle-rise-hand': 'toggleRaiseHand',
         'toggle-tts': 'toggleTts'
     };
 

@@ -27,7 +27,7 @@ export default class TTS {
      */
     static speak(text = null) {
         // Speak only if enabled in config
-        if (text !== null) {
+        if (text !== null && TTS.enabled()) {
             let utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 1;
             if (TTS.voice !== null)

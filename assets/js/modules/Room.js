@@ -66,12 +66,10 @@ export default class Room {
             let mainContainer = document.getElementById('main_iframe_container');
             let mainOptions = {
                 roomName: this.roomID,
-		userInfo: {
-		    displayName: this.displayName
-		},
-		enableNoisyMicDetection: false,
-		prejoinPageEnabled: false,
-                width: mainContainer.width,
+                userInfo: {
+                    displayName: this.displayName
+                },
+		        width: mainContainer.width,
                 height: mainContainer.height,
                 interfaceConfigOverwrite: {
                     CLOSE_PAGE_GUEST_HINT: true
@@ -84,6 +82,8 @@ export default class Room {
                     enablePopupExternalAuth: false,
                     startWithAudioMuted: false,
                     startWithVideoMuted: false,
+                    enableNoisyMicDetection: false,
+		            prejoinPageEnabled: false,
                     p2p: {enabled: true},
                     desktopSharingChromeDisabled: true,
                     disableShortcuts: true,

@@ -1,3 +1,5 @@
+import IVR from "./IVR.js";
+
 /**
  * Basic translation class
  */
@@ -83,15 +85,21 @@ export default class Lang {
         });
     }
 
+
     /**
      * Change lang to use
      *
      * @param langCode
+     *
+     * @returns {Promise<unknown>}
      */
     static changeLocal(langCode){
         let context = this;
-        this.init(langCode).then(function(){
-            context.langCode = langCode;
+        return new Promise(resolve => {
+            context.init(langCode).then(function(){
+                context.langCode = langCode;
+                resolve();
+            });
         });
     }
 }

@@ -88,35 +88,18 @@ export default class JitsiMeetUIHelper {
                     .then(config => {
                         Config.setDictionary(config);
 
-                        this.ivr = new IVR();
-
-                        this.initRoomFromURL();
-
-                        this.room = new Room(this.roomID, this.displayName);
-
-                        // If TTS disabled, hide on UI
-                        if (!TTS.enabled()) {
-                            document.querySelector('div[data-content="tts"]').classList.add('hide');
-                        }
-
-                        this.menuTimer = Config.get('auto_hide_menu_timer');
-
-                        // Update page title
-                        if (this.roomID)
-                            document.title = this.roomID;
-                        else
-                            document.title = this.constructor.name;
-
-
                         // Update locale
                         let lang = Config.get('lang');
-                        if (lang)
-                            Lang.changeLocal(lang);
+                        Lang.changeLocal(lang).then(function(){
+                            /* Init lang for TTS */
+                            if (TTS.enabled()){
+                                window.speechSynthesis.onvoiceschanged = function() {
+                                    TTS.initVoice();
+                                };
+                            }
 
-                        // try to enter the room
-                        if (this.roomID)
-                            this.ivr.roomID = this.roomID;
-                            this.ivr.enterRoom();
+                            window.JitsiMeetUIHelper.initUIHelper();
+                        });
                     })
                     .catch(error => {
                         throw new Error(error);
@@ -127,6 +110,44 @@ export default class JitsiMeetUIHelper {
             })
     }
 
+
+    /**
+     * Init UI helper
+     */
+    initUIHelper(){
+
+        this.ivr = new IVR();
+
+        this.initRoomFromURL();
+
+        this.room = new Room(this.roomID, this.displayName);
+
+        // If TTS disabled, hide on UI
+        if (!TTS.enabled()) {
+            document.querySelector('div[data-content="tts"]').classList.add('hide');
+        }
+
+        this.menuTimer = Config.get('auto_hide_menu_timer');
+
+        // Update page title
+        if (this.roomID)
+            document.title = this.roomID;
+        else
+            document.title = this.constructor.name;
+
+
+
+        // try to enter the room
+        if (this.roomID){
+            this.ivr.roomID = this.roomID;
+            this.ivr.enterRoom();
+        }
+    }
+
+
+    /**
+     * Get room & display name from URL
+     */
     initRoomFromURL(){
         const queryString = window.location.search;
         const urlParams = new URLSearchParams(queryString);
@@ -158,7 +179,7 @@ export default class JitsiMeetUIHelper {
                     }
                 }
             }
-	}
+	    }
     }
 
     /**

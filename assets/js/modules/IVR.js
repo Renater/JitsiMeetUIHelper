@@ -140,6 +140,8 @@ export default class IVR {
         if (event.key === '#'){
             // Enter room
             this.enterRoomBtn.click();
+            event.preventDefault();
+            event.stopPropagation();
 
         }else if (event.key === 'Backspace'){
             // Remove last digit
@@ -168,11 +170,11 @@ export default class IVR {
      *
      * @param reason
      */
-    onError(reason){
+    onError(reason, details){
         switch (reason){
             case 'room_id_too_short':
             default:
-                this.helper.onError('room_id', reason);
+                this.helper.onError('room_id', reason, details);
                 break;
         }
     }
@@ -182,7 +184,7 @@ export default class IVR {
      */
     enterRoom(){
         if (this.roomID.length <= 3){
-            this.onError('room_id_too_short')
+            this.onError('room_id_too_short', this.roomID)
         }else {
             // Hide previous errors
             document.getElementById('errors').classList.add('hidden');
@@ -193,10 +195,10 @@ export default class IVR {
             let context = this;
 
             let onError= function(reason){
+                context.helper.onError('room_id', reason, context.roomID);
                 context.loader.classList.add('hidden');
                 context.inputRoomID.value = "";
                 context.roomID = "";
-                context.helper.onError('room_id', reason);
             };
 
             this.loader.classList.remove('hidden');

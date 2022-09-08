@@ -168,11 +168,11 @@ export default class JitsiMeetUIHelper {
                 const maxLength = Config.get('ivr.conference_code.max_length');
                 const num = Number(roomIDFromURL);
                 if (Config.get('ivr.confmapper_url') && !Number.isInteger(num)){
-                    this.onError('room_id', 'bad_format')
+                    this.onError('room_id', 'bad_format', roomIDFromURL)
                 }else{
                     const len = Math.ceil(Math.log(roomIDFromURL + 1) / Math.LN10) -1;
                     if (len < minLength || len > maxLength){
-                        this.onError('room_id', 'bad_format')
+                        this.onError('room_id', 'bad_format', roomIDFromURL)
                     }else{
                         this.roomID = roomIDFromURL;
                         this.ivr.setRoomID(roomIDFromURL);
@@ -293,8 +293,9 @@ export default class JitsiMeetUIHelper {
      *
      * @param element
      * @param reason
+     * @param details
      */
-    onError(element, reason) {
+    onError(element, reason, details) {
         if (reason instanceof Object) {
             if (reason.hasOwnProperty('error')){
                  reason = reason.error;
@@ -319,11 +320,11 @@ export default class JitsiMeetUIHelper {
                 }else if (reason === 'Provided number is not valid'){
                     reason = 'conference_not_found';
                 }
-                this.renderError(element, reason);
+                this.renderError(element, reason, details);
                 break;
 
             default:
-                this.renderError(element, reason);
+                this.renderError(element, reason, details);
         }
     }
 
@@ -334,8 +335,9 @@ export default class JitsiMeetUIHelper {
      *
      * @param element
      * @param reason
+     * @param details
      */
-    renderError(element, reason){
+    renderError(element, reason, details){
         let ctn = document.getElementById('errors');
         ctn.classList.remove('hidden');
 
@@ -343,7 +345,14 @@ export default class JitsiMeetUIHelper {
 
         switch (element){
             case 'room_id':
-                reasonHtml.innerHTML = Lang.has(reason) ? Lang.translate(reason) : reason;
+                if (Lang.has(reason)){
+                    reason = Lang.translate(reason)
+                    TTS.speak(reason);
+                }
+                if (details)
+                    reason += ` (${details})`
+                reasonHtml.innerHTML = reason;
+                this.ivr.inputRoomID.value = '';
                 break;
             case 'ivr_disabled':
             default:

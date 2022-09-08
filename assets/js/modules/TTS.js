@@ -28,14 +28,21 @@ export default class TTS {
     static speak(text = null) {
         // Speak only if enabled in config
         if (text !== null && TTS.enabled()) {
+
             let utterance = new SpeechSynthesisUtterance(text);
+            window.speechSynthesis.cancel()
+            utterance.pitch = 1;
             utterance.rate = 1;
+            utterance.volume = 1;
+            utterance.lang = Config.get('lang');
+
             if (TTS.voice !== null)
                 utterance.voice = TTS.voice;
 
-            speechSynthesis.speak(utterance);
+            window.speechSynthesis.speak(utterance);
         }
     }
+
 
     /**
      * Init voices to use the best one

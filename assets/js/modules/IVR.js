@@ -1,6 +1,8 @@
 import Config from './Config.js';
 import Utils from './Utils.js';
 import JitsiMeetUIHelper from '../JitsiMeetUIHelper.js';
+import TTS from './TTS.js';
+import Lang from './Lang.js';
 
 /**
  * Class IVR
@@ -105,8 +107,18 @@ export default class IVR {
     /**
      * Show IVR main container
      */
-    show(){
+    show(speak = true){
         this.mainIvrContainer.classList.remove('hidden');
+
+        if (speak){
+            // add '. !' allows to get a small pause between sentences
+            const queue = [Lang.translate('ivr_disclaimer'), '. !', Lang.translate('ivr_enter_conference_number_tts')];
+            TTS.speak(queue);
+        }
+
+        // Translate some UI elements
+        document.getElementById("ivr_enter_conference_number")
+            .innerText = Lang.translate('ivr_enter_conference_number');
     }
 
     /**

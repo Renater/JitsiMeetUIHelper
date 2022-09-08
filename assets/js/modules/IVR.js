@@ -141,9 +141,16 @@ export default class IVR {
             // Enter room
             this.enterRoomBtn.click();
 
-        }else if (event.key === 'Backspace' || event.key === '*'){
+        }else if (event.key === 'Backspace'){
             // Remove last digit
             this.roomID = this.roomID.slice(0, -1);
+
+        }else if (event.key === '*'){
+            // Remove last digit
+            this.roomID = this.roomID.slice(0, -1);
+            this.inputRoomID.value = this.roomID;
+            event.preventDefault();
+            event.stopPropagation();
 
         }else if (!isNaN(event.key)) {
             // Add digit

@@ -18,7 +18,7 @@
         "conference_not_found": "Conference not found",
         "room_id_bad_format": "Invalid conference code format",
         "timeout": "Request timeout",
-        "ivr_disclaimer": "Welcome to the videoconference system provided by RENATER",
+        "ivr_disclaimer": "Welcome to this JitsiMeet videoconference system",
         "ivr_enter_conference_number": "Please enter your conference number (end by #)",
         "ivr_enter_conference_number_tts": "Please enter your conference number (end by sharp)"
     }

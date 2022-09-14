@@ -28,6 +28,7 @@ Available parameters:
 | auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds) |     x     | 10            |
 | tts                            | TTS configurations (Text To Speech)                   |           |               |
 | tts.enabled                    | Enable / disable TTS                                  |           | true          |
+| tts.engine                     | TTS Engine to use. Must be "embedded" or "local_files"|     x     | local_files   |
 | ivr                            | IVR configurations                                    |           |               |
 | ivr.enabled                    | Enable / disable IVR                                  |           | false         |
 | ivr.confmapper_url             | Confmapper URL                                        |           | null          |
@@ -42,10 +43,14 @@ Available parameters:
 | shortcuts.toggle-video         | Mute / unmute video                                   |           | v             |
 | shortcuts.toggle-chat          | Show / hide chat'                                     |           | c             |
 | shortcuts.toggle-tile-view     | Show / hide tile view                                 |           | w             |
-| shortcuts.toggle-raise-hand     | raise / down hand                                      |           | r             |
+| shortcuts.toggle-raise-hand    | raise / down hand                                     |           | r             |
 | shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                 |           | x             |
 
- 
+>> Note: about tts.engine
+> 
+> 2 engine are currently supported for using TTS:
+> * local_files: use pre generated audio files 
+> * embedded: use browser embedded TTS engine 
 
 ## Usage
 

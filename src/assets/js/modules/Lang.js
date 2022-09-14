@@ -69,7 +69,7 @@ export default class Lang {
                 headers: new Headers({'content-type': 'application/json'}),
             };
 
-            fetch(`assets/js/lang/${lang}.json`, settings)
+            fetch(`assets/lang/${lang}.json`, settings)
                 .then(response => {
                     response.json()
                         .then(function (data){

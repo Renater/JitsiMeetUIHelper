@@ -20,6 +20,6 @@
         "timeout": "Délai de la demande dépassé",
         "ivr_disclaimer": "Bienvenue dans ce système de visio conférence JitsiMeet",
         "ivr_enter_conference_number": "Veuillez entrez le numéro de votre conférence (terminez par #)",
-        "ivr_enter_conference_number_tts": "Veuillez entrez le numéro de votre conférence (terminez par dièse)"
+        "ivr_enter_conference_number_tts": "Veuillez entrez le numéro de votre conférence, terminez par dièse."
     }
 }

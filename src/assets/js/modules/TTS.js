@@ -54,7 +54,7 @@ export default class TTS {
         let voices = window.speechSynthesis.getVoices();
 
         for(let voice of voices){
-            if (voice.lang === lang){
+            if (voice.lang === lang && voice.localService === true){
                 TTS.voice = voice;
                 break;
             }

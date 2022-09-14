@@ -211,6 +211,7 @@ export default class IVR {
                                 .then(function (data) {
                                     if (data.hasOwnProperty('conference')) {
                                         context.mainIvrContainer.classList.add('hidden');
+                                        context.helper.roomID = this.roomID;
                                         context.helper.roomID = data.conference;
                                         context.helper.initJitsiMeetConference();
                                         document.querySelector('div[class="header-logo"]').classList.add('hidden');

@@ -225,6 +225,7 @@ export default class IVR {
                     }).catch(onError);
             } else {
                 context.mainIvrContainer.classList.add('hidden');
+                context.helper.roomID = this.roomID;
                 context.helper.initJitsiMeetConference();
                 document.querySelector('div[class="header-logo"]').classList.add('hidden');
             }

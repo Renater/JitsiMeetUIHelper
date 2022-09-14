@@ -33,6 +33,7 @@ export default class Room {
      * Room constructor
      *
      * @param roomID
+     * @param displayName
      */
     constructor(roomID, displayName) {
         if (roomID){
@@ -121,32 +122,32 @@ export default class Room {
 
         // Mute / unmute audio
         this.jitsiApiClient.addListener('audioMuteStatusChanged', function (response) {
-                TTS.speak(Lang.translate(!response.muted ? 'micro_enabled' : 'micro_disabled'));
+                TTS.speak(!response.muted ? 'micro_enabled' : 'micro_disabled');
             }
         );
 
         // Mute / unmute video
         this.jitsiApiClient.addListener('videoMuteStatusChanged', function (response) {
-                TTS.speak(Lang.translate(!response.muted ? 'camera_enabled' : 'camera_disabled'));
+                TTS.speak(!response.muted ? 'camera_enabled' : 'camera_disabled');
             }
         );
 
         // Hide / show chat'
         this.jitsiApiClient.addListener('chatUpdated', function (response) {
-                TTS.speak(Lang.translate(response.isOpen ? 'chat_shown' : 'chat_hidden'));
+                TTS.speak(response.isOpen ? 'chat_shown' : 'chat_hidden');
             }
         );
 
 
         // Hide / show tile view
         this.jitsiApiClient.addListener('tileViewChanged', function (response) {
-                TTS.speak(Lang.translate(response.enabled ? 'tile_view_shown' : 'tile_view_hidden'));
+                TTS.speak(response.enabled ? 'tile_view_shown' : 'tile_view_hidden');
             }
         );
 
         // Hand raise / down
         this.jitsiApiClient.addListener('raiseHandUpdated', function (response) {
-                TTS.speak(Lang.translate(response.handRaised ? 'hand_raised' : 'hand_down'));
+                TTS.speak(response.handRaised ? 'hand_raised' : 'hand_down');
             }
         );
 

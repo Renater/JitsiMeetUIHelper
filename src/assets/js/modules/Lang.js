@@ -1,5 +1,3 @@
-import IVR from "./IVR.js";
-
 /**
  * Basic translation class
  */
@@ -37,7 +35,7 @@ export default class Lang {
 
             }else{
                 console.error(`Translation not found: ${key}`)
-                return null;
+                return `{${key}}`;
             }
         }
     }

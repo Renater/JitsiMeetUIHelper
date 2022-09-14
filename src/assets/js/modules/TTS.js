@@ -1,13 +1,14 @@
 import Config from "./Config.js";
+import TTSEmbedded from "./TTS/TTSEmbedded.js"
+import TTSLocalFiles from "./TTS/TTSLocalFiles.js"
 
 export default class TTS {
 
     /**
-     * Voice to use
-     *
-     * @type {null|SpeechSynthesisVoice}
+     * Engine to use
+     * @type {TTSEmbedded|TTSLocalFiles}
      */
-    static voice = null;
+    static engine = null;
 
     /**
      * Return true if IVR is enabled in config
@@ -26,38 +27,18 @@ export default class TTS {
      * @param text Text to be spoken
      */
     static speak(text = null) {
-        // Speak only if enabled in config
-        if (text !== null && TTS.enabled()) {
-
-            let utterance = new SpeechSynthesisUtterance(text);
-            window.speechSynthesis.cancel()
-            utterance.pitch = 1;
-            utterance.rate = 1;
-            utterance.volume = 1;
-            utterance.lang = Config.get('lang');
-
-            if (TTS.voice !== null)
-                utterance.voice = TTS.voice;
-
-            window.speechSynthesis.speak(utterance);
-        }
-    }
-
-
-    /**
-     * Init voices to use the best one
-     */
-    static initVoice(){
-        let lang = Config.get('lang');
-        lang = `${lang}-${lang.toUpperCase()}`;
-
-        let voices = window.speechSynthesis.getVoices();
-
-        for(let voice of voices){
-            if (voice.lang === lang && voice.localService === true){
-                TTS.voice = voice;
+        const eng = Config.get('tts.engine');
+        switch (eng){
+            case 'embedded':
+                TTSEmbedded.speak(text);
                 break;
-            }
+
+            case 'local_files':
+                TTSLocalFiles.speak(text);
+                break;
+
+            default:
+                    console.error('Unknown TTS engine: '+eng);
         }
     }
 }

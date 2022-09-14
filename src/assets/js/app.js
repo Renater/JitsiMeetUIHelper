@@ -1,6 +1,5 @@
 import JitsiMeetUIHelper from './JitsiMeetUIHelper.js';
 import Lang from './modules/Lang.js';
-import TTS from './modules/TTS.js';
 
 
 

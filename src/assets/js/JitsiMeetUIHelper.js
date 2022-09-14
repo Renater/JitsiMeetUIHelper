@@ -4,6 +4,7 @@ import Lang from './modules/Lang.js';
 import TTS from './modules/TTS.js';
 import Room from './modules/Room.js';
 import Utils from './modules/Utils.js';
+import TTSEmbedded from "./modules/TTS/TTSEmbedded.js";
 
 /**
  * Class JitsiMeetUIHelper
@@ -92,9 +93,9 @@ export default class JitsiMeetUIHelper {
                         let lang = Config.get('lang');
                         Lang.changeLocal(lang).then(function(){
                             /* Init lang for TTS */
-                            if (TTS.enabled()){
+                            if (TTS.enabled() && Config.get('tts.engine') === "embedded"){
                                 window.speechSynthesis.onvoiceschanged = function() {
-                                    TTS.initVoice();
+                                    TTSEmbedded.initVoice();
                                 };
                             }
 
@@ -346,8 +347,8 @@ export default class JitsiMeetUIHelper {
         switch (element){
             case 'room_id':
                 if (Lang.has(reason)){
-                    reason = Lang.translate(reason)
                     TTS.speak(reason);
+                    reason = Lang.translate(reason)
                 }
                 if (details)
                     reason += ` (${details})`

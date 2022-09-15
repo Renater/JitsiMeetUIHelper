@@ -1,5 +1,6 @@
 
 import Lang from '../Lang.js';
+import Config from "../Config.js";
 
 export default class TTSLocalFiles {
 
@@ -17,6 +18,12 @@ export default class TTSLocalFiles {
      */
     static currentSound = 0;
 
+    /**
+     * Audio file format
+     *
+     * @type {string}
+     */
+    static format = "mp3";
 
     /**
      * Use local generated files as TTS
@@ -27,13 +34,17 @@ export default class TTSLocalFiles {
         // Reset queue to force pause when this function is called
         this.reset();
 
+        // Set audio file format
+        const format = Config.get('tts.format');
+        if (format) this.format = format;
+
         if (text instanceof Array){
             for (const key of text) {
                 if (key !== ". !")
-                    this.queue.push(new Audio(`/assets/lang/files/${Lang.langCode}/${key}.mp3`));
+                    this.queue.push(new Audio(`/assets/lang/files/${Lang.langCode}/${key}.${this.format}`));
             }
         }else{
-            this.queue.push(new Audio(`/assets/lang/files/${Lang.langCode}/${text}.mp3`));
+            this.queue.push(new Audio(`/assets/lang/files/${Lang.langCode}/${text}.${this.format}`));
         }
 
         this.queue.forEach((sound) => {

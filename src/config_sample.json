@@ -4,7 +4,8 @@
   "auto_hide_menu_timer": 10,
   "tts": {
     "enabled": true,
-    "engine": "local_files"
+    "engine": "local_files",
+    "format": "mp3"
   },
   "ivr": {
     "enabled": true,

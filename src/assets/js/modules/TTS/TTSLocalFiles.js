@@ -7,7 +7,7 @@ export default class TTSLocalFiles {
     /**
      * Audio files queue
      *
-     * @type {[Audio]}
+     * @type {[HTMLAudioElement]}
      */
     static queue = [];
 
@@ -41,10 +41,10 @@ export default class TTSLocalFiles {
         if (text instanceof Array){
             for (const key of text) {
                 if (key !== ". !")
-                    this.queue.push(new Audio(`/assets/lang/files/${Lang.langCode}/${key}.${this.format}`));
+                    this.queue.push(new Audio(`assets/lang/files/${Lang.langCode}/${key}.${this.format}`));
             }
         }else{
-            this.queue.push(new Audio(`/assets/lang/files/${Lang.langCode}/${text}.${this.format}`));
+            this.queue.push(new Audio(`assets/lang/files/${Lang.langCode}/${text}.${this.format}`));
         }
 
         this.queue.forEach((sound) => {

@@ -79,10 +79,28 @@ Example:
 window.JitsiMeetUIHelper.executeCommand('toggle-video');
 ```
 
+## TTS, Text-To-Speech
+
+TTS is enabled by default. You can disable it by a config parameter.
+
+### Browser embedded TTS
+
+To use the browser embedded TTS, set the parameter "tts.engine" to "embedded".
+> Warning: chrome uses translate.google.com API, so each time tts is used, a called is made to a Google server...
+
+### Local files TTS
+
+It's also possible to generate audio files to be played instead of the browser embedded TTS engine.
+
+To do so, you can use the scripts/generate_tts_files.py
+
+```bash
+# show help
+scripts/generate_tts_files.py -h
+```
 
 
-
-## Translate the TTS data
+### Translate the TTS data
 
 By default, this app is on **french**.
 

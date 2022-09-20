@@ -317,9 +317,10 @@ export default class JitsiMeetUIHelper {
                     }
                 }else if (reason === 'bad_format'){
                     reason = `${element}_${reason}`;
-
+                    this.ivr.show();
                 }else if (reason === 'Provided number is not valid'){
                     reason = 'conference_not_found';
+                    this.ivr.show();
                 }
                 this.renderError(element, reason, details);
                 break;

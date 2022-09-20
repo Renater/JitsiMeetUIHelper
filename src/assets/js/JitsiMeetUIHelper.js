@@ -256,7 +256,7 @@ export default class JitsiMeetUIHelper {
 
             // TTS
             if (!silent)
-                this.speak(Lang.translate('menu_shown'));
+                this.speak('menu_shown');
 
             let context = this;
             if (this.menuTimer === null) this.menuTimer = Config.get('auto_hide_menu_timer');
@@ -277,7 +277,7 @@ export default class JitsiMeetUIHelper {
 
             // TTS
             if (!silent)
-                this.speak(Lang.translate('menu_hidden'));
+                this.speak('menu_hidden');
 
             this.menuTimer = null;
             if (this.menuInterval !== null) {

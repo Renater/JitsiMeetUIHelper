@@ -9,6 +9,7 @@
   },
   "ivr": {
     "enabled": true,
+    "number": 0,
     "confmapper_url": "",
     "confmapper_endpoint": "",
     "confmapper_timeout": 5000,

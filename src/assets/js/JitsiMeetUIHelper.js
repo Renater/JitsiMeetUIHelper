@@ -168,15 +168,19 @@ export default class JitsiMeetUIHelper {
                 const minLength = Config.get('ivr.conference_code.min_length');
                 const maxLength = Config.get('ivr.conference_code.max_length');
                 const num = Number(roomIDFromURL);
-                if (Config.get('ivr.confmapper_url') && !Number.isInteger(num)){
-                    this.onError('room_id', 'bad_format', roomIDFromURL)
+                if (num === Config.get('ivr.number')) {
+                    this.onError('room_id', 'not_set');
                 }else{
-                    const len = Math.ceil(Math.log(roomIDFromURL + 1) / Math.LN10) -1;
-                    if (len < minLength || len > maxLength){
+                    if (Config.get('ivr.confmapper_url') && !Number.isInteger(num)){
                         this.onError('room_id', 'bad_format', roomIDFromURL)
                     }else{
-                        this.roomID = roomIDFromURL;
-                        this.ivr.setRoomID(roomIDFromURL);
+                        const len = Math.ceil(Math.log(roomIDFromURL + 1) / Math.LN10) -1;
+                        if (len < minLength || len > maxLength){
+                            this.onError('room_id', 'bad_format', roomIDFromURL)
+                        }else{
+                            this.roomID = roomIDFromURL;
+                            this.ivr.setRoomID(roomIDFromURL);
+                        }
                     }
                 }
             }

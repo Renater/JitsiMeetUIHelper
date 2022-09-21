@@ -28,17 +28,19 @@ export default class TTS {
      */
     static speak(text = null) {
         const eng = Config.get('tts.engine');
-        switch (eng){
-            case 'embedded':
-                TTSEmbedded.speak(text);
-                break;
+        if (text !== null && TTS.enabled()) {
+            switch (eng){
+                case 'embedded':
+                    TTSEmbedded.speak(text);
+                    break;
 
-            case 'local_files':
-                TTSLocalFiles.speak(text);
-                break;
+                case 'local_files':
+                    TTSLocalFiles.speak(text);
+                    break;
 
-            default:
-                    console.error('Unknown TTS engine: '+eng);
+                default:
+                        console.error('Unknown TTS engine: '+eng);
+            }
         }
     }
 }

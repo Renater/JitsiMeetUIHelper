@@ -4,7 +4,7 @@ body{
     font-family:BlinkMacSystemFont,open_sanslight,"Helvetica Neue",Helvetica,Arial,sans-serif!important;
 
     background: rgb(239,239,239);
-    background: linear-gradient(0deg, rgba(239,239,239,1) 0%, rgba(158,185,236,1) 52%, rgba(95,123,191,1) 100%);
+    background: linear-gradient(0deg, rgba(95,123,191,1) 0%, rgba(158,185,236,1) 52%, rgba(239,239,239,1) 100%);
 
     overflow: hidden;
 
@@ -26,7 +26,9 @@ button{
 div.centered{
     max-width: 480px;
     width: auto;
-    margin:auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10rem;
     color: black;
     background: rgba(239, 239, 239, .8);
     padding: 2rem 1rem 2rem 2rem;
@@ -128,11 +130,11 @@ div#ivr_container{
     z-index: 100;
 }
 .header-logo{
+    width: 25%;
     position: relative;
     margin-top: 2rem;
     margin-left: 2rem;
 }
-
 div#ivr_enter_room{
     display: flex;
     margin-top: 2rem;
@@ -144,32 +146,7 @@ div#ivr_enter_room span#loader{
 }
 div#ivr_enter_room span#ivr_enter_room_label{
     background: #adadad;
-    flex: 0 0 65%;
-}
-div#ivr_enter_room span#ivr_enter_room_button{
-    flex: 1;
-    background-color: #6c79b8;
-    border-radius: 0 10px 10px 0;
-    border: none;
-    font-size: 19px;
-    outline: none;
-    position: relative;
-    z-index: 2;
-    cursor: pointer;
-    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.3);
-    padding-top: 1px;
-    max-width: 8rem;
-    height: 3.1rem;
-}
-div#ivr_enter_room span#ivr_enter_room_button button{
-    cursor: pointer;
-    color: #FFF;
-    font-weight: 600;
-    font-size: large;
-    height: 3.1rem;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+    flex: 0 0 95%;
 }
 div#ivr_enter_room span#ivr_enter_room_label{
     height: 3rem;

@@ -70,7 +70,7 @@ export default class Room {
                 userInfo: {
                     displayName: this.displayName
                 },
-		        width: mainContainer.width,
+                width: mainContainer.width,
                 height: mainContainer.height,
                 interfaceConfigOverwrite: {
                     CLOSE_PAGE_GUEST_HINT: true
@@ -84,14 +84,16 @@ export default class Room {
                     startWithAudioMuted: false,
                     startWithVideoMuted: false,
                     enableNoisyMicDetection: false,
-		            prejoinPageEnabled: false,
+                    prejoinPageEnabled: false,
+                    prejoinConfig: {
+                        enabled: false
+                    },
                     p2p: {enabled: true},
                     desktopSharingChromeDisabled: true,
                     disableShortcuts: true,
                     buttonsWithNotifyClick:[
                         'hangup'
                     ]
-
                 },
                 parentNode: mainContainer,
             }
@@ -107,7 +109,7 @@ export default class Room {
                 // Add listeners when conference is ready
                 context.addAPIListeners();
                 context.addShortcutListeners();
-
+                context.jitsiApiClient.executeCommand('overwriteConfig', { toolbarButtons: [] });
                 resolve();
             });
         });

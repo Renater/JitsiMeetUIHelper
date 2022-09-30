@@ -15,8 +15,13 @@ export default class TTS {
      *
      * @returns {boolean}
      */
-    static enabled(){
-        return Config.get('tts.enabled') === true;
+    static available(module = '*'){
+        if (module === '*'){
+            return Config.get(`tts.available_for.ivr`) || Config.get(`tts.available_for.ui_helper`);
+
+        }else{
+            return Config.get(`tts.available_for.${module}`) === true;
+        }
     }
 
     /**
@@ -26,9 +31,9 @@ export default class TTS {
      *
      * @param text Text to be spoken
      */
-    static speak(text = null) {
+    static speak(text = null, module = '*') {
         const eng = Config.get('tts.engine');
-        if (text !== null && TTS.enabled()) {
+        if (text !== null && TTS.available(module)) {
             switch (eng){
                 case 'embedded':
                     TTSEmbedded.speak(text);

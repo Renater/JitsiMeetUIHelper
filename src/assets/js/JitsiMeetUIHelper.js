@@ -93,7 +93,7 @@ export default class JitsiMeetUIHelper {
                         let lang = Config.get('lang');
                         Lang.changeLocal(lang).then(function(){
                             /* Init lang for TTS */
-                            if (TTS.enabled() && Config.get('tts.engine') === "embedded"){
+                            if (TTS.available() && Config.get('tts.engine') === "embedded"){
                                 window.speechSynthesis.onvoiceschanged = function() {
                                     TTSEmbedded.initVoice();
                                 };
@@ -124,7 +124,7 @@ export default class JitsiMeetUIHelper {
         this.room = new Room(this.roomID, this.displayName);
 
         // If TTS disabled, hide on UI
-        if (!TTS.enabled()) {
+        if (!TTS.available('ui_helper')) {
             document.querySelector('div[data-content="tts"]').classList.add('hide');
         }
 
@@ -226,7 +226,11 @@ export default class JitsiMeetUIHelper {
                     return;
 
                 case 'toggle-tts':
-                    Config.set('tts.enabled', !Config.get('tts.enabled'));
+                    if (TTS.available('ui_helper')){
+                        this.room.ttsEnabled = !this.room.ttsEnabled;
+                    }else{
+                        console.error(`[Error] Command {${name}} not available`)
+                    }
                     break;
 
                 case 'toggle-audio':
@@ -374,7 +378,7 @@ export default class JitsiMeetUIHelper {
      * @param text
      */
     speak(text){
-        if (TTS.enabled()){
+        if (TTS.available('ui_helper')){
             TTS.speak(text);
         }
     }

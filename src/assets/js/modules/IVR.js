@@ -113,7 +113,7 @@ export default class IVR {
         if (speak){
             // add '. !' allows to get a small pause between sentences
             const queue = ['ivr_disclaimer', '. !', 'ivr_enter_conference_number_tts'];
-            TTS.speak(queue);
+            TTS.speak(queue, 'ivr');
         }
 
         // Translate some UI elements

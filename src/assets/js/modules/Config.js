@@ -12,7 +12,10 @@ export default class Config {
         "domain": null,
         "auto_hide_menu_timer": 10,
         "tts": {
-            "enabled": true
+            "available_for": {
+                "ivr": true,
+                "ui_helper": true
+            },
         },
         "ivr": {
             "enabled": false,

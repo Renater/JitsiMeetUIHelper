@@ -3,9 +3,13 @@
   "domain": "https://rendez-vous.renater.fr",
   "auto_hide_menu_timer": 10,
   "tts": {
-    "available_for": {
-      "ivr": true,
-      "ui_helper": false
+    "ivr": {
+      "available": true,
+      "speaker_on": true
+    },
+    "ui_helper": {
+      "available": true,
+      "speaker_on": true
     },
     "engine": "local_files",
     "format": "mp3"

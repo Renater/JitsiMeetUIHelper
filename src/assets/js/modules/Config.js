@@ -12,10 +12,16 @@ export default class Config {
         "domain": null,
         "auto_hide_menu_timer": 10,
         "tts": {
-            "available_for": {
-                "ivr": true,
-                "ui_helper": true
+            "ivr": {
+                "available": true,
+                "speaker_on": true
             },
+            "ui_helper": {
+                "available": true,
+                "speaker_on": true
+            },
+            "engine": "",
+            "format": ""
         },
         "ivr": {
             "enabled": false,

@@ -227,7 +227,7 @@ export default class JitsiMeetUIHelper {
 
                 case 'toggle-tts':
                     if (TTS.available('ui_helper')){
-                        this.room.ttsEnabled = !this.room.ttsEnabled;
+                        Config.set('tts.ui_helper.speaker_on', !Config.get('tts.ui_helper.speaker_on'));
                     }else{
                         console.error(`[Error] Command {${name}} not available`)
                     }

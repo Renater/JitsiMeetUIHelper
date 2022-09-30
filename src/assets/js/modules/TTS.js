@@ -17,10 +17,10 @@ export default class TTS {
      */
     static available(module = '*'){
         if (module === '*'){
-            return Config.get(`tts.available_for.ivr`) || Config.get(`tts.available_for.ui_helper`);
+            return Config.get(`tts.ivr.available`) || Config.get(`tts.ui_helper.available`);
 
         }else{
-            return Config.get(`tts.available_for.${module}`) === true;
+            return Config.get(`tts.${module}.available`) === true;
         }
     }
 

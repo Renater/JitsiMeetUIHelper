@@ -30,13 +30,6 @@ export default class Room {
 
 
     /**
-     * Tts enabled / disabled
-     *
-     * @type {boolean}
-     */
-    ttsEnabled = true;
-
-    /**
      * Room constructor
      *
      * @param roomID
@@ -128,25 +121,23 @@ export default class Room {
      * Listen to state changes
      */
     addAPIListeners() {
-        let context = this;
-
         // Mute / unmute audio
         this.jitsiApiClient.addListener('audioMuteStatusChanged', function (response) {
-                if (context.ttsEnabled)
+                if (Config.get('tts.ui_helper.speaker_on'))
                     TTS.speak(!response.muted ? 'micro_enabled' : 'micro_disabled', 'ui_helper');
             }
         );
 
         // Mute / unmute video
         this.jitsiApiClient.addListener('videoMuteStatusChanged', function (response) {
-                if (context.ttsEnabled)
+                if (Config.get('tts.ui_helper.speaker_on'))
                     TTS.speak(!response.muted ? 'camera_enabled' : 'camera_disabled', 'ui_helper');
             }
         );
 
         // Hide / show chat'
         this.jitsiApiClient.addListener('chatUpdated', function (response) {
-                if (context.ttsEnabled)
+                if (Config.get('tts.ui_helper.speaker_on'))
                     TTS.speak(response.isOpen ? 'chat_shown' : 'chat_hidden', 'ui_helper');
             }
         );
@@ -154,14 +145,14 @@ export default class Room {
 
         // Hide / show tile view
         this.jitsiApiClient.addListener('tileViewChanged', function (response) {
-                if (context.ttsEnabled)
+                if (Config.get('tts.ui_helper.speaker_on'))
                     TTS.speak(response.enabled ? 'tile_view_shown' : 'tile_view_hidden', 'ui_helper');
             }
         );
 
         // Hand raise / down
         this.jitsiApiClient.addListener('raiseHandUpdated', function (response) {
-                if (context.ttsEnabled)
+                if (Config.get('tts.ui_helper.speaker_on'))
                     TTS.speak(response.handRaised ? 'hand_raised' : 'hand_down', 'ui_helper');
             }
         );

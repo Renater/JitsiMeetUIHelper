@@ -27,11 +27,14 @@ Available parameters:
 | domain                         | Domain to initiate the room                            |     x     |  string | undefined     |
 | auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds)  |     x     |  number | 10            |
 | tts                            | TTS configurations (Text To Speech)                    |           |  object |               |
-| tts.available_for              | Enable / disable TTS for "ivr" and "ui_helper"         |     x     |  object |               |
-| tts.available_for.ivr          | Enable / disable TTS for "ivr"                         |     x     | boolean |               |
-| tts.available_for.ui_helper    | Enable / disable TTS for "ui_helper"                   |     x     | boolean |               |
+| tts.ivr                        | TTS configuration for "ivr"                            |     x     |  object |               |
+| tts.ivr.available              | Enable / disable TTS                                   |     x     | boolean | true          |
+| tts.ivr.speaker_on             | Enable / disable speaker                               |     x     | boolean | true          |
+| tts.ui_helper                  | TTS configuration for "ui_helper"                      |     x     |  object |               |
+| tts.ui_helper.available        | Enable / disable TTS                                   |     x     | boolean | true          |
+| tts.ui_helper.speaker_on       | Enable / disable speaker                               |     x     | boolean | true          |
 | tts.engine                     | TTS Engine to use. Must be "embedded" or "local_files" |     x     |  string | local_files   |
-| tts.format                     | Audio file format to use                               |           |  string | mp3           |
+| tts.format                     | Audio file format to use (if engine is "local_files")  |           |  string | mp3           |
 | ivr                            | IVR configurations                                     |           |  object |               |
 | ivr.enabled                    | Enable / disable IVR                                   |           | boolean | false         |
 | ivr.confmapper_url             | Confmapper URL                                         |           |  string | null          |

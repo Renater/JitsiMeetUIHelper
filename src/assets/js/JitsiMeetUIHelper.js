@@ -284,7 +284,7 @@ export default class JitsiMeetUIHelper {
             this.dtmfMenu.classList.add('hide');
 
             // TTS
-            if (!silent)
+            if (!silent && Config.get('tts.ui_helper.speaker_on'))
                 this.speak('menu_hidden');
 
             this.menuTimer = null;

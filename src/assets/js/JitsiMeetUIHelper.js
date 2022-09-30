@@ -263,7 +263,7 @@ export default class JitsiMeetUIHelper {
             this.dtmfMenu.classList.add('show');
 
             // TTS
-            if (!silent)
+            if (!silent && Config.get('tts.ui_helper.speaker_on'))
                 this.speak('menu_shown');
 
             let context = this;

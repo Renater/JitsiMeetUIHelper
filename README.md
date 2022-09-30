@@ -21,31 +21,33 @@ Copy the **config_sample.json** to **config.json** at the root of your app.
 
 Available parameters:
 
-| Key                            | Description                                            | Mandatory | Default value |
-|--------------------------------|--------------------------------------------------------|:---------:|---------------|
-| lang                           | Lang used by TTS (browser embedded Text To Speech)     |     x     | fr            |
-| domain                         | Domain to initiate the room                            |     x     | undefined     |
-| auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds)  |     x     | 10            |
-| tts                            | TTS configurations (Text To Speech)                    |           |               |
-| tts.enabled                    | Enable / disable TTS                                   |           | true          |
-| tts.engine                     | TTS Engine to use. Must be "embedded" or "local_files" |     x     | local_files   |
-| tts.format                     | Audio file format to use                               |           | mp3           |
-| ivr                            | IVR configurations                                     |           |               |
-| ivr.enabled                    | Enable / disable IVR                                   |           | false         |
-| ivr.confmapper_url             | Confmapper URL                                         |           | null          |
-| ivr.confmapper_endpoint        | Confmapper endpoint                                    |           | null          |
-| ivr.confmapper_timeout         | Request timeout                                        |           | 5000          |
-| ivr.conference_code            | Configuration for conference code                      |           |               |
-| ivr.conference_code.min_length | Conference code minimal length                         |           | 2             |
-| ivr.conference_code.max_length | Conference code maximal length                         |           | 10            |
-| shortcuts                      | List of keyboard shortcuts (lower case)                |           |               |
-| shortcuts.show-dtmf-menu       | Show / hide menu                                       |           | h             |
-| shortcuts.toggle-audio         | Mute / unmute audio                                    |           | m             |
-| shortcuts.toggle-video         | Mute / unmute video                                    |           | v             |
-| shortcuts.toggle-chat          | Show / hide chat'                                      |           | c             |
-| shortcuts.toggle-tile-view     | Show / hide tile view                                  |           | w             |
-| shortcuts.toggle-raise-hand    | raise / down hand                                      |           | r             |
-| shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                  |           | x             |
+| Key                            | Description                                            | Mandatory |    Type | Default value |
+|--------------------------------|--------------------------------------------------------|:---------:|--------:|---------------|
+| lang                           | Lang used by TTS (browser embedded Text To Speech)     |     x     |  string | fr            |
+| domain                         | Domain to initiate the room                            |     x     |  string | undefined     |
+| auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds)  |     x     |  number | 10            |
+| tts                            | TTS configurations (Text To Speech)                    |           |  object |               |
+| tts.available_for              | Enable / disable TTS for "ivr" and "ui_helper"         |     x     |  object |               |
+| tts.available_for.ivr          | Enable / disable TTS for "ivr"                         |     x     | boolean |               |
+| tts.available_for.ui_helper    | Enable / disable TTS for "ui_helper"                   |     x     | boolean |               |
+| tts.engine                     | TTS Engine to use. Must be "embedded" or "local_files" |     x     |  string | local_files   |
+| tts.format                     | Audio file format to use                               |           |  string | mp3           |
+| ivr                            | IVR configurations                                     |           |  object |               |
+| ivr.enabled                    | Enable / disable IVR                                   |           | boolean | false         |
+| ivr.confmapper_url             | Confmapper URL                                         |           |  string | null          |
+| ivr.confmapper_endpoint        | Confmapper endpoint                                    |           |  string | null          |
+| ivr.confmapper_timeout         | Request timeout                                        |           |  number | 5000          |
+| ivr.conference_code            | Configuration for conference code                      |           |  object |               |
+| ivr.conference_code.min_length | Conference code minimal length                         |           |  number | 2             |
+| ivr.conference_code.max_length | Conference code maximal length                         |           |  number | 10            |
+| shortcuts                      | List of keyboard shortcuts (lower case)                |           |  object |               |
+| shortcuts.show-dtmf-menu       | Show / hide menu                                       |           |  string | h             |
+| shortcuts.toggle-audio         | Mute / unmute audio                                    |           |  string | m             |
+| shortcuts.toggle-video         | Mute / unmute video                                    |           |  string | v             |
+| shortcuts.toggle-chat          | Show / hide chat'                                      |           |  string | c             |
+| shortcuts.toggle-tile-view     | Show / hide tile view                                  |           |  string | w             |
+| shortcuts.toggle-raise-hand    | raise / down hand                                      |           |  string | r             |
+| shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                  |           |  string | x             |
 
 >> Note: about tts.engine
 > 

@@ -9,7 +9,7 @@
     },
     "ui_helper": {
       "available": true,
-      "speaker_on": true
+      "speaker_on": false
     },
     "engine": "local_files",
     "format": "mp3"

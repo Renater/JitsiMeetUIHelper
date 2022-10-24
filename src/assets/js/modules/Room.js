@@ -73,7 +73,8 @@ export default class Room {
                 width: mainContainer.width,
                 height: mainContainer.height,
                 interfaceConfigOverwrite: {
-                    CLOSE_PAGE_GUEST_HINT: true
+                    CLOSE_PAGE_GUEST_HINT: true,
+                    SHOW_CHROME_EXTENSION_BANNER: false
                 },
                 configOverwrite: {
                     disableDeepLinking: true,

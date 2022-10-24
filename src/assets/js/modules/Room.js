@@ -88,6 +88,7 @@ export default class Room {
                     prejoinConfig: {
                         enabled: false
                     },
+                    autoKnockLobby: true,
                     p2p: {enabled: true},
                     desktopSharingChromeDisabled: true,
                     disableShortcuts: true,

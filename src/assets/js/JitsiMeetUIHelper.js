@@ -200,7 +200,19 @@ export default class JitsiMeetUIHelper {
         this.room.initJitsiMeetConference().then(function () {
             context.#toggleMenu(true, true);
             document.getElementById('dtmf_show_menu').classList.remove('hidden')
-
+            // Translate menu elements
+            document.getElementById("micro_action")
+                .innerText = Lang.translate('micro_action');
+            document.getElementById("camera_action")
+                .innerText = Lang.translate('camera_action');
+            document.getElementById("chat_action")
+                .innerText = Lang.translate('chat_action');
+            document.getElementById("view_action")
+                .innerText = Lang.translate('view_action');
+            document.getElementById("hand_action")
+                .innerText = Lang.translate('hand_action');
+            document.getElementById("tts_action")
+                .innerText = Lang.translate('tts_action');
         }).catch(function () {
             context.#toggleMenu(false, false);
             document.getElementById('dtmf_show_menu').classList.add('hidden')

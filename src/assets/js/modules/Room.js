@@ -54,6 +54,7 @@ export default class Room {
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
         'toggle-raise-hand': 'toggleRaiseHand',
+        'toggle-share-screen': 'toggleShareScreen'
     };
 
 
@@ -91,7 +92,7 @@ export default class Room {
                     },
                     autoKnockLobby: true,
                     p2p: {enabled: true},
-                    desktopSharingChromeDisabled: true,
+                    desktopSharingChromeDisabled: false,
                     disableShortcuts: true,
                     buttonsWithNotifyClick:[
                         'hangup'
@@ -203,6 +204,7 @@ export default class Room {
                 case 'toggle-chat':
                 case 'toggle-tile-view':
                 case 'toggle-raise-hand':
+                case 'toggle-share-screen':
                     // Send generic command to JitsiMeetExternalAPI
                     this.jitsiApiClient.executeCommand(this.commands[name], args);
                     break;

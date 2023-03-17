@@ -19,6 +19,7 @@
     "number": 0,
     "confmapper_url": "",
     "confmapper_endpoint": "",
+    "auth_url": "",
     "confmapper_timeout": 5000,
     "conference_code": {
       "min_length": 2,

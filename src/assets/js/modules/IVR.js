@@ -235,6 +235,12 @@ export default class IVR {
             let onTimerError= function(reason){
                 resolve();
             };
+
+            // Check secure  conference template name
+            let templateRegex = new RegExp(Config.get('ivr.secure_regexp'));
+            if (templateRegex.test(roomName) === false ){
+                resolve();
+            };
             Utils.fetchWithTimeout(`${url}?jwt=true&roomName=${roomName}&domain=${mappedDomain}`, {method: 'get'}, onTimerError)
                 .then(response => {
                     try {

@@ -20,6 +20,7 @@
     "confmapper_url": "",
     "confmapper_endpoint": "",
     "auth_url": "",
+    "secure_regexp": ".*",
     "confmapper_timeout": 5000,
     "conference_code": {
       "min_length": 2,

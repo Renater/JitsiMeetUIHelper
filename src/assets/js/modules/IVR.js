@@ -240,6 +240,7 @@ export default class IVR {
             let templateRegex = new RegExp(Config.get('ivr.secure_regexp'));
             if (templateRegex.test(roomName) === false ){
                 resolve();
+                return;
             };
             Utils.fetchWithTimeout(`${url}?jwt=true&roomName=${roomName}&domain=${mappedDomain}`, {method: 'get'}, onTimerError)
                 .then(response => {

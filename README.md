@@ -21,36 +21,38 @@ Copy the **config_sample.json** to **config.json** at the root of your app.
 
 Available parameters:
 
-| Key                            | Description                                            | Mandatory |    Type | Default value |
-|--------------------------------|--------------------------------------------------------|:---------:|--------:|---------------|
-| lang                           | Lang used by TTS (browser embedded Text To Speech)     |     x     |  string | fr            |
-| domain                         | Domain to initiate the room                            |     x     |  string | undefined     |
-| auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds)  |     x     |  number | 10            |
-| tts                            | TTS configurations (Text To Speech)                    |           |  object |               |
-| tts.ivr                        | TTS configuration for "ivr"                            |     x     |  object |               |
-| tts.ivr.available              | Enable / disable TTS                                   |     x     | boolean | true          |
-| tts.ivr.speaker_on             | Enable / disable speaker                               |     x     | boolean | true          |
-| tts.ui_helper                  | TTS configuration for "ui_helper"                      |     x     |  object |               |
-| tts.ui_helper.available        | Enable / disable TTS                                   |     x     | boolean | true          |
-| tts.ui_helper.speaker_on       | Enable / disable speaker                               |     x     | boolean | true          |
-| tts.engine                     | TTS Engine to use. Must be "embedded" or "local_files" |     x     |  string | local_files   |
-| tts.format                     | Audio file format to use (if engine is "local_files")  |           |  string | mp3           |
-| ivr                            | IVR configurations                                     |           |  object |               |
-| ivr.enabled                    | Enable / disable IVR                                   |           | boolean | false         |
-| ivr.confmapper_url             | Confmapper URL                                         |           |  string | null          |
-| ivr.confmapper_endpoint        | Confmapper endpoint                                    |           |  string | null          |
-| ivr.confmapper_timeout         | Request timeout                                        |           |  number | 5000          |
-| ivr.conference_code            | Configuration for conference code                      |           |  object |               |
-| ivr.conference_code.min_length | Conference code minimal length                         |           |  number | 2             |
-| ivr.conference_code.max_length | Conference code maximal length                         |           |  number | 10            |
-| shortcuts                      | List of keyboard shortcuts (lower case)                |           |  object |               |
-| shortcuts.show-dtmf-menu       | Show / hide menu                                       |           |  string | h             |
-| shortcuts.toggle-audio         | Mute / unmute audio                                    |           |  string | m             |
-| shortcuts.toggle-video         | Mute / unmute video                                    |           |  string | v             |
-| shortcuts.toggle-chat          | Show / hide chat'                                      |           |  string | c             |
-| shortcuts.toggle-tile-view     | Show / hide tile view                                  |           |  string | w             |
-| shortcuts.toggle-raise-hand    | raise / down hand                                      |           |  string | r             |
-| shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                  |           |  string | x             |
+| Key                            | Description                                                   | Mandatory |    Type | Default value |
+|--------------------------------|---------------------------------------------------------------|:---------:|--------:|---------------|
+| lang                           | Lang used by TTS (browser embedded Text To Speech)            |     x     |  string | fr            |
+| domain                         | Domain to initiate the room                                   |     x     |  string | undefined     |
+| auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds)         |     x     |  number | 10            |
+| tts                            | TTS configurations (Text To Speech)                           |           |  object |               |
+| tts.ivr                        | TTS configuration for "ivr"                                   |     x     |  object |               |
+| tts.ivr.available              | Enable / disable TTS                                          |     x     | boolean | true          |
+| tts.ivr.speaker_on             | Enable / disable speaker                                      |     x     | boolean | true          |
+| tts.ui_helper                  | TTS configuration for "ui_helper"                             |     x     |  object |               |
+| tts.ui_helper.available        | Enable / disable TTS                                          |     x     | boolean | true          |
+| tts.ui_helper.speaker_on       | Enable / disable speaker                                      |     x     | boolean | true          |
+| tts.engine                     | TTS Engine to use. Must be "embedded" or "local_files"        |     x     |  string | local_files   |
+| tts.format                     | Audio file format to use (if engine is "local_files")         |           |  string | mp3           |
+| ivr                            | IVR configurations                                            |           |  object |               |
+| ivr.enabled                    | Enable / disable IVR                                          |           | boolean | false         |
+| ivr.confmapper_url             | Confmapper URL                                                |           |  string | null          |
+| ivr.confmapper_endpoint        | Confmapper endpoint                                           |           |  string | null          |
+| ivr.confmapper_timeout         | Request timeout                                               |           |  number | 5000          |
+| ivr.auth_url                   | JWT auth server generator endpoint                            |           |  string | null          |
+| ivr.secure_regexp              | regexp to define secure room name authorised to get JWT token |           |  string | null          |
+| ivr.conference_code            | Configuration for conference code                             |           |  object |               |
+| ivr.conference_code.min_length | Conference code minimal length                                |           |  number | 2             |
+| ivr.conference_code.max_length | Conference code maximal length                                |           |  number | 10            |
+| shortcuts                      | List of keyboard shortcuts (lower case)                       |           |  object |               |
+| shortcuts.show-dtmf-menu       | Show / hide menu                                              |           |  string | h             |
+| shortcuts.toggle-audio         | Mute / unmute audio                                           |           |  string | m             |
+| shortcuts.toggle-video         | Mute / unmute video                                           |           |  string | v             |
+| shortcuts.toggle-chat          | Show / hide chat'                                             |           |  string | c             |
+| shortcuts.toggle-tile-view     | Show / hide tile view                                         |           |  string | w             |
+| shortcuts.toggle-raise-hand    | raise / down hand                                             |           |  string | r             |
+| shortcuts.toggle-tts           | Enable / disable TTS (Text To Speech)                         |           |  string | x             |
 
 >> Note: about tts.engine
 > 
@@ -119,7 +121,3 @@ If you want have your own translation :
  * Change the lang code in the **config.json** file
 
 # Known limitations
-
-At the moment, this tool won't work if you are using a Jitsi Meet instance with authentication.
-
-We're working on it!

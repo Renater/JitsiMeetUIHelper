@@ -113,11 +113,26 @@ export default class Room {
                 context.addAPIListeners();
                 context.addShortcutListeners();
                 context.jitsiApiClient.executeCommand('overwriteConfig', { toolbarButtons: [] });
+                context.initMediaState();
                 resolve();
             });
         });
     }
 
+
+    initMediaState(){
+        let context = this;
+
+        context.jitsiApiClient.isAudioMuted().then(muted => {
+            if (muted)
+                context.jitsiApiClient.executeCommand('toggleAudio');
+        });
+
+        context.jitsiApiClient.isVideoMuted().then(muted => {
+            if (muted)
+                context.jitsiApiClient.executeCommand('toggleVideo');
+        });
+    }
 
 
     /**

@@ -62,13 +62,27 @@ Available parameters:
 
 ## Usage
 
-To make it work, the user have to specify the **room_id** (ie. the Jitsi Meet conference name);
+This UIhelper is made to provide an interface for the SIPMediaGateway. 
+By default, it displays an IVR to enter your room PIN with DTMF. 
 
-To do this, the URL must contain the parameter "room_id=XXXX";
+An external service named a conference mapper can be used to map your PIN to a more complex Jitsi room name.
+
+You can also use an external service to provide a valid JWT token to enable authentication from the UIhelper.
+
+URL parameters can be used to skip the IVR strep or customise the connection to JItsi-Meet.
+
+
+| parameter                            | Description                                                       | Mandatory |    Type | Default value |
+|--------------------------------------|-------------------------------------------------------------------|:---------:|--------:|---------------|
+| room_id                              | Jitsi Meet conférence name or PIN ID if confmapper is configured  |           |  string | undefined     |
+| display_name                         | Domain to initiate the room                                       |           |  string | undefined     |
+| room_token                           | Valid Jitsi JWT token                                             |           |  sting  | undefined     |
+
+
 
 Example: 
 
-*http://yourdomain.com/JitsiMeetUIHelper/index.html?room_id=my_room_name*
+*http://yourdomain.com/JitsiMeetUIHelper/index.html?room_id=my_room_name&display_name=bob&room_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjb250ZXh0Ijp7InV*
 
 ### Supported commands
 

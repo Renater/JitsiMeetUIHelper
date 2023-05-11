@@ -18,6 +18,20 @@ export default class JitsiMeetUIHelper {
      */
     roomID = null;
 
+    /**
+     * User Display Name
+     *
+     * @type {string|number|null}
+     */
+    displayName = null;
+
+    /**
+     * Room JWT Token 
+     *
+     * @type {string|number|null}
+     */
+    roomToken = null;
+
 
     /**
      * the DTMF menu
@@ -122,7 +136,7 @@ export default class JitsiMeetUIHelper {
 
         this.initRoomFromURL();
 
-        this.room = new Room(this.roomID, this.displayName);
+        this.room = new Room(this.roomID, this.displayName, this.roomToken);
 
         // If TTS disabled, hide on UI
         if (!TTS.available('ui_helper')) {
@@ -156,6 +170,10 @@ export default class JitsiMeetUIHelper {
 
         if (urlParams.has('display_name')) {
             this.displayName = urlParams.get('display_name');
+        }
+
+        if (urlParams.has('room_token')) {
+            this.roomToken = urlParams.get('room_token');
         }
 
         if (!urlParams.has('room_id')) {

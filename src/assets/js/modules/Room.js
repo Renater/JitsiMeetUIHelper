@@ -30,17 +30,28 @@ export default class Room {
 
 
     /**
+     * JWT Token
+     *
+     * @type {string|null}
+     */
+    roomToken = null;
+
+
+    /**
      * Room constructor
      *
      * @param roomID
      * @param displayName
      */
-    constructor(roomID, displayName) {
+    constructor(roomID, displayName, roomToken) {
         if (roomID){
             this.roomID = roomID;
         }
         if (displayName){
-            this.displayName = displayName
+            this.displayName = displayName;
+        }
+        if (roomToken){
+            this.roomToken = roomToken;
         }
     }
 
@@ -73,6 +84,7 @@ export default class Room {
                 },
                 width: mainContainer.width,
                 height: mainContainer.height,
+                jwt: this.roomToken,
                 interfaceConfigOverwrite: {
                     CLOSE_PAGE_GUEST_HINT: true,
                     SHOW_CHROME_EXTENSION_BANNER: false

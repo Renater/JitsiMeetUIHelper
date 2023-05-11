@@ -192,6 +192,7 @@ export default class IVR {
 
             // Get conference room_id
             let url = Config.get('ivr.confmapper_url')+Config.get('ivr.confmapper_endpoint');
+            let url_auth = Config.get('ivr.auth_url')
             let context = this;
 
             let onError= function(reason){
@@ -203,26 +204,20 @@ export default class IVR {
 
             this.loader.classList.remove('hidden');
 
-            if (url) {
-                Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
-                    .then(response => {
-                        try {
-                            response.json()
-                                .then(function (data) {
-                                    if (data.hasOwnProperty('conference')) {
-                                        context.mainIvrContainer.classList.add('hidden');
-                                        context.helper.roomID = data.conference;
-                                        context.helper.initJitsiMeetConference();
-                                        document.querySelector('div[class="header-logo"]').classList.add('hidden');
-                                    } else {
-                                        onError(data);
-                                    }
-                                })
-                                .catch(onError);
-                        }catch (e){
-                            console.error('response_not_json');
-                        }
-                    }).catch(onError);
+            if (url && url_auth) {
+                this.getConferenceName(url,onError).then( () =>{
+                        this.getConferenceToken(url_auth,onError).then ( () => {
+                            context.helper.initJitsiMeetConference();
+                            document.querySelector('div[class="header-logo"]').classList.add('hidden');
+                        });
+                    }
+                );
+            }
+            else if (url) {
+                this.getConferenceName(url,onError).then ( () => {
+                    context.helper.initJitsiMeetConference();
+                    document.querySelector('div[class="header-logo"]').classList.add('hidden');
+                });
             } else {
                 context.mainIvrContainer.classList.add('hidden');
                 context.helper.roomID = this.roomID;
@@ -231,4 +226,63 @@ export default class IVR {
             }
         }
     }
+
+    getConferenceToken(url,onError){
+        let context = this;
+        return new Promise(resolve => {
+            let roomName = context.helper.roomID.split('@')[0];
+            let mappedDomain = context.helper.roomID.split('@conference.')[1];
+            let onTimerError= function(reason){
+                resolve();
+            };
+
+            // Check secure  conference template name
+            let templateRegex = new RegExp(Config.get('ivr.secure_regexp'));
+            if (templateRegex.test(roomName) === false ){
+                resolve();
+                return;
+            };
+            Utils.fetchWithTimeout(`${url}?jwt=true&roomName=${roomName}&domain=${mappedDomain}`, {method: 'get'}, onTimerError)
+                .then(response => {
+                    try {
+                        response.json()
+                            .then(function (data) {
+                                if (data.hasOwnProperty('jwt')) {
+                                    context.helper.roomToken = data.jwt;
+                                } 
+                            })
+                            .catch(onError);
+                    }catch (e){
+                        console.error('response_not_json');
+                    }
+                resolve();    
+                }).catch(onError);            
+        });
+    }
+
+    getConferenceName(url,onError) {
+        let context = this;
+        return new Promise(resolve => {
+            Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
+                .then(response => {
+                    try {
+                        response.json()
+                            .then(function (data) {
+                                if (data.hasOwnProperty('conference')) {
+                                    context.mainIvrContainer.classList.add('hidden');
+                                    context.helper.roomID = data.conference;
+                                 
+                                    resolve();
+                                } else {
+                                    onError(data);
+                                }
+                            })
+                            .catch(onError);
+                    }catch (e){
+                        console.error('response_not_json');
+                    }
+                }).catch(onError);
+        });
+    }
+
 }

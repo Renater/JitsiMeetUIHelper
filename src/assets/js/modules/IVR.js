@@ -250,13 +250,13 @@ export default class IVR {
                                 if (data.hasOwnProperty('jwt')) {
                                     context.helper.roomToken = data.jwt;
                                 } 
-                                resolve();
                             })
                             .catch(onError);
                     }catch (e){
                         console.error('response_not_json');
                     }
-                }).catch(onError);
+                resolve();    
+                }).catch(onError);            
         });
     }
 

@@ -38,6 +38,13 @@ export default class Room {
 
 
     /**
+     * firstMessage
+     *
+     * @type {boolean}
+     */
+    firstMessage = false;
+
+    /**
      * Room constructor
      *
      * @param roomID
@@ -53,6 +60,7 @@ export default class Room {
         if (roomToken){
             this.roomToken = roomToken;
         }
+        this.firstMessage = false;
     }
 
 
@@ -151,6 +159,8 @@ export default class Room {
      * Listen to state changes
      */
     addAPIListeners() {
+        let context = this;
+
         // Mute / unmute audio
         this.jitsiApiClient.addListener('audioMuteStatusChanged', function (response) {
                 if (Config.get('tts.ui_helper.speaker_on'))
@@ -170,6 +180,15 @@ export default class Room {
                 if (Config.get('tts.ui_helper.speaker_on'))
                     TTS.speak(response.isOpen ? 'chat_shown' : 'chat_hidden', 'ui_helper');
             }
+        );
+
+        // Icoming message    
+        this.jitsiApiClient.addListener('incomingMessage', function (response) {
+                if (!context.firstMessage){
+                    context.jitsiApiClient.executeCommand('toggleChat');
+                    context.firstMessage = true;
+                }
+             }
         );
 
 

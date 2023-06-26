@@ -122,20 +122,25 @@ export default class Room {
             }
 
             // Connect main client
-            let subDomain = Config.get('domain').replace(/^https?:\/\//, '');
-            this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
+            var externalAPI = document.createElement('script');
+            externalAPI.onload = function () {
+                let subDomain = Config.get('domain').replace(/^https?:\/\//, '');
+                this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
 
-            mainContainer.classList.remove('hidden');
+                mainContainer.classList.remove('hidden');
 
-            let context = this;
-            this.jitsiApiClient.addListener('videoConferenceJoined', function () {
-                // Add listeners when conference is ready
-                context.addAPIListeners();
-                context.addShortcutListeners();
-                context.jitsiApiClient.executeCommand('overwriteConfig', { toolbarButtons: [] });
-                context.initMediaState();
-                resolve();
-            });
+                let context = this;
+                this.jitsiApiClient.addListener('videoConferenceJoined', function () {
+                    // Add listeners when conference is ready
+                    context.addAPIListeners();
+                    context.addShortcutListeners();
+                    context.jitsiApiClient.executeCommand('overwriteConfig', { toolbarButtons: [] });
+                    context.initMediaState();
+                    resolve();
+                });
+            };
+            externalAPI.src = Config.get("domain")+"/external_api.js"
+            document.head.appendChild(externalAPI);
         });
     }
 

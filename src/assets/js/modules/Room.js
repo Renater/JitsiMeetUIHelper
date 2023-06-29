@@ -122,15 +122,15 @@ export default class Room {
             }
 
             // Connect main client
+            let context = this;
             var externalAPI = document.createElement('script');
             externalAPI.onload = function () {
                 let subDomain = Config.get('domain').replace(/^https?:\/\//, '');
-                this.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
+                context.jitsiApiClient = new JitsiMeetExternalAPI(subDomain, mainOptions);
 
                 mainContainer.classList.remove('hidden');
 
-                let context = this;
-                this.jitsiApiClient.addListener('videoConferenceJoined', function () {
+                context.jitsiApiClient.addListener('videoConferenceJoined', function () {
                     // Add listeners when conference is ready
                     context.addAPIListeners();
                     context.addShortcutListeners();

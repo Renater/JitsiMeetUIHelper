@@ -350,7 +350,7 @@ export default class JitsiMeetUIHelper {
         let lockElement =  document.getElementById("lock_icon");
         if (lockElement){
             lockElement.classList.toggle('hidden');
-            if (lockElement.contains('hidden'))
+            if (lockElement.classList.contains('hidden'))
                 this.speak('lobby_disabled');
             else
                 this.speak('lobby_enabled');

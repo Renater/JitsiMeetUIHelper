@@ -212,6 +212,7 @@ export default class JitsiMeetUIHelper {
     initJitsiMeetConference() {
         let context = this;
         this.room.roomID = context.roomID.split('@')[0];
+        this.room.roomToken = context.roomToken;
         let mappedDomain = context.roomID.split('@conference.')[1];
         if (mappedDomain) {
             Config.set('domain', `https://${mappedDomain}`);

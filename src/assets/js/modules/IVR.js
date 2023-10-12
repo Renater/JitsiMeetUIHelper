@@ -236,6 +236,10 @@ export default class IVR {
                 resolve();
             };
 
+            let onServerError = function(reason){
+                resolve();
+            }
+
             // Check secure  conference template name
             let templateRegex = new RegExp(Config.get('ivr.secure_regexp'));
             if (templateRegex.test(roomName) === false ){
@@ -250,13 +254,14 @@ export default class IVR {
                                 if (data.hasOwnProperty('jwt')) {
                                     context.helper.roomToken = data.jwt;
                                 } 
+                                resolve();
                             })
-                            .catch(onError);
+                            .catch(onServerError);
                     }catch (e){
                         console.error('response_not_json');
-                    }
-                resolve();    
-                }).catch(onError);            
+                        onServerError();
+                    }                 
+                }).catch(onServerError);            
         });
     }
 

@@ -235,8 +235,8 @@ export default class JitsiMeetUIHelper {
                 .innerText = Lang.translate('hand_action');
             document.getElementById("tts_action")
                 .innerText = Lang.translate('tts_action');
-            document.getElementById("tts_action")
-                .innerText = Lang.translate('particpant_action');
+            document.getElementById("participant_action")
+                .innerText = Lang.translate('participant_action');
             document.getElementById("lobby_action")
                 .innerText = Lang.translate('lobby_action');
         }).catch(function () {
@@ -271,7 +271,7 @@ export default class JitsiMeetUIHelper {
                     }
                     break;
 
-                case 'toogle-lobby':
+                case 'toggle-lobby':
                     this.toggleLobbyNotification();
                     this.room.executeCommand(name, args);
                     break;
@@ -282,7 +282,7 @@ export default class JitsiMeetUIHelper {
                 case 'toggle-tile-view':
                 case 'toggle-raise-hand':
                 case 'toggle-share-screen':                
-                case 'toogle-participants-pane':
+                case 'toggle-participants-pane':
                     this.room.executeCommand(name, args);
                     break;
 
@@ -347,7 +347,7 @@ export default class JitsiMeetUIHelper {
      *
      */
     toggleLobbyNotification() {
-        lockElement =  document.getElementById("lock_icon");
+        let lockElement =  document.getElementById("lock_icon");
         if (lockElement){
             lockElement.classList.toggle('hidden');
             if (lockElement.contains('hidden'))

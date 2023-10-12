@@ -45,6 +45,20 @@ export default class Room {
     firstMessage = false;
 
     /**
+     * lobby state
+     *
+     * @type {boolean}
+     */
+    lobbyActivated = false;
+
+    /**
+     * participant_pane state
+     *
+     * @type {boolean}
+     */
+    participantsPaneVisible = false;
+
+    /**
      * Room constructor
      *
      * @param roomID
@@ -261,14 +275,20 @@ export default class Room {
         } else {
             console.log(`Received command: ${name}`);
             switch (name) {
+                case 'toggle-lobby':
+                    this.lobbyActivated = !this.lobbyActivated;
+                    this.jitsiApiClient.executeCommand(this.commands[name], this.lobbyActivated);
+                    break;
+                case 'toggle-participants-pane':
+                    this.participantsPaneVisible = !this.participantsPaneVisible;
+                    this.jitsiApiClient.executeCommand(this.commands[name], this.participantsPaneVisible);
+                    break;
                 case 'toggle-audio':
                 case 'toggle-video':
                 case 'toggle-chat':
                 case 'toggle-tile-view':
                 case 'toggle-raise-hand':
                 case 'toggle-share-screen':
-                case 'toogle-lobby':
-                case 'toogle-participants-pane':
                     // Send generic command to JitsiMeetExternalAPI
                     this.jitsiApiClient.executeCommand(this.commands[name], args);
                     break;

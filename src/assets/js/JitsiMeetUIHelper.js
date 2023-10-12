@@ -74,7 +74,9 @@ export default class JitsiMeetUIHelper {
         'toggle-tile-view': 'toggleTileView',
         'toggle-raise-hand': 'toggleRaiseHand',
         'toggle-tts': 'toggleTts',
-        'toggle-share-screen': 'toggleShareScreen'
+        'toggle-share-screen': 'toggleShareScreen',
+        'toggle-lobby': 'toggleLobby',
+        'toggle-participants-pane': 'toggleParticipantsPane'
     };
 
 
@@ -233,6 +235,10 @@ export default class JitsiMeetUIHelper {
                 .innerText = Lang.translate('hand_action');
             document.getElementById("tts_action")
                 .innerText = Lang.translate('tts_action');
+            document.getElementById("tts_action")
+                .innerText = Lang.translate('particpant_action');
+            document.getElementById("lobby_action")
+                .innerText = Lang.translate('lobby_action');
         }).catch(function () {
             context.#toggleMenu(false, false);
             document.getElementById('dtmf_show_menu').classList.add('hidden')
@@ -265,12 +271,18 @@ export default class JitsiMeetUIHelper {
                     }
                     break;
 
+                case 'toogle-lobby':
+                    this.toggleLobbyNotification();
+                    this.room.executeCommand(name, args);
+                    break;
+
                 case 'toggle-audio':
                 case 'toggle-video':
                 case 'toggle-chat':
                 case 'toggle-tile-view':
                 case 'toggle-raise-hand':
-                case 'toggle-share-screen':
+                case 'toggle-share-screen':                
+                case 'toogle-participants-pane':
                     this.room.executeCommand(name, args);
                     break;
 
@@ -329,6 +341,21 @@ export default class JitsiMeetUIHelper {
         }
     }
 
+
+/**
+     * Command to Notfify Lobby update state 
+     *
+     */
+    toggleLobbyNotification() {
+        lockElement =  document.getElementById("lock_icon");
+        if (lockElement){
+            lockElement.classList.toggle('hidden');
+            if (lockElement.contains('hidden'))
+                this.speak('lobby_disabled');
+            else
+                this.speak('lobby_enabled');
+        }
+    }
 
     /**
      * Default behavior on error

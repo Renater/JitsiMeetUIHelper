@@ -73,7 +73,9 @@ export default class Room {
         'toggle-chat': 'toggleChat',
         'toggle-tile-view': 'toggleTileView',
         'toggle-raise-hand': 'toggleRaiseHand',
-        'toggle-share-screen': 'toggleShareScreen'
+        'toggle-share-screen': 'toggleShareScreen',
+        'toggle-lobby': 'toggleLobby',
+        'toggle-participants-pane': 'toggleParticipantsPane'
     };
 
 
@@ -211,6 +213,15 @@ export default class Room {
             }
         );
 
+
+        // Hide / show tile view Participant Pane
+        this.jitsiApiClient.addListener('participantsPaneToggled', function (response) {
+            if (Config.get('tts.ui_helper.speaker_on'))
+                TTS.speak(response.open ? 'participant_shown' : 'participant_hidden', 'ui_helper');
+        });
+        
+
+
         // Hangup, go to IVR root page
         this.jitsiApiClient.addListener('toolbarButtonClicked', function (response) {
                 if (response.key === 'hangup'){
@@ -256,6 +267,8 @@ export default class Room {
                 case 'toggle-tile-view':
                 case 'toggle-raise-hand':
                 case 'toggle-share-screen':
+                case 'toogle-lobby':
+                case 'toogle-participants-pane':
                     // Send generic command to JitsiMeetExternalAPI
                     this.jitsiApiClient.executeCommand(this.commands[name], args);
                     break;

@@ -26,6 +26,12 @@
         "timeout": "Délai de la demande dépassé",
         "ivr_disclaimer": "Bienvenue dans ce système de visio conférence JitsiMeet",
         "ivr_enter_conference_number": "Veuillez entrez le numéro de votre conférence (terminez par #)",
-        "ivr_enter_conference_number_tts": "Veuillez entrez le numéro de votre conférence, terminez par dièse."
+        "ivr_enter_conference_number_tts": "Veuillez entrez le numéro de votre conférence, terminez par dièse.",
+        "participant_action": "Ouvrir / Fermer la liste des participants.",
+        "participant_shown": "Liste des participants affichée.",
+        "participant_hidden": "Liste des participants masquée.",
+        "lobby_action": "Activer / Desactiver la salle d'attente.",
+        "lobby_enabled": "Salle d'attente activée.",
+        "lobby_disabled": "Salle d'attente désactivée."
     }
 }

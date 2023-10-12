@@ -96,6 +96,14 @@ div.dtmf_item[data-content="tts"].hide{
     display: none;
 }
 
+div#lock_icon{
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    width: 12rem;
+    height: 12rem;
+}
+
 div#dtmf_menu_content{
     min-width: 23rem;
     margin-bottom: 1rem;

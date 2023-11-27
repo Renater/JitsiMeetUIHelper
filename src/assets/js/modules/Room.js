@@ -116,7 +116,8 @@ export default class Room {
                     disableShortcuts: true,
                     buttonsWithNotifyClick:[
                         'hangup'
-                    ]
+                    ],
+                    testing : {no_customUI: true}
                 },
                 parentNode: mainContainer,
             }

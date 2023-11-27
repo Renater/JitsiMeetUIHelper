@@ -243,6 +243,21 @@ export default class Room {
                 }
             }
         );
+
+        // Moderator status
+        this.jitsiApiClient.addListener('moderationStatusChanged', function (response) {
+        
+            }   
+        );
+
+        // notificationTriggered
+        this.jitsiApiClient.addListener('notificationTriggered', function (response) {
+                if (response.title == 'lobby' ){
+
+                }
+            }   
+        );
+
     }
 
     /**

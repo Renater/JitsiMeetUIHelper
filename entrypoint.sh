@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FILE_CERT="/config/apache.pem"
-FILE_HTTP_CONFIG="/config/httpp_uihelper.conf"
+FILE_HTTP_CONFIG="/config/http_uihelper.conf"
 FILE_UI_CONFIG="/config/config.json"
 
 SERVER_NAME="uihelper.rendez-vous.renater.fr"
@@ -17,13 +17,16 @@ fi
 if [ -f "$FILE_HTTP_CONFIG" ]; then
     echo "Custom $FILE_HTTP_CONFIG found use it"
     cp $FILE_HTTP_CONFIG /etc/apache2/sites-available/uihelper.conf
+fi
 
-if [ f "$FILE_UI_CONFIG" ]; then
+if [ -f "$FILE_UI_CONFIG" ]; then
     echo "Custom $FILE_UI_CONFIG found use it"
-    cp $FILE_UI_CONFIG /var/UIhelper/src/config.json
+    cp $FILE_UI_CONFIG /var/UIHelper/src/config.json
+else
+    cp /var/UIHelper/src/config_sample.json /var/UIHelper/src/config.json
 fi
 
 
-
+echo starting Apache
 #Start Apache
 /usr/sbin/apache2ctl -DFOREGROUND

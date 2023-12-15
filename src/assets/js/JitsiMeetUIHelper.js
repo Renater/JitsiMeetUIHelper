@@ -76,7 +76,8 @@ export default class JitsiMeetUIHelper {
         'toggle-tts': 'toggleTts',
         'toggle-share-screen': 'toggleShareScreen',
         'toggle-lobby': 'toggleLobby',
-        'toggle-participants-pane': 'toggleParticipantsPane'
+        'toggle-participants-pane': 'toggleParticipantsPane',
+        'mute-everyone': 'muteEveryone'
     };
 
 
@@ -239,6 +240,8 @@ export default class JitsiMeetUIHelper {
                 .innerText = Lang.translate('participant_action');
             document.getElementById("lobby_action")
                 .innerText = Lang.translate('lobby_action');
+            document.getElementById("mute-everyone_action")
+                .innerText = Lang.translate('mute-everyone_action');
         }).catch(function () {
             context.#toggleMenu(false, false);
             document.getElementById('dtmf_show_menu').classList.add('hidden')
@@ -272,7 +275,7 @@ export default class JitsiMeetUIHelper {
                     break;
 
                 case 'toggle-lobby':
-                    this.toggleLobbyNotification();
+                 //   this.toggleLobbyNotification();
                     this.room.executeCommand(name, args);
                     break;
 
@@ -283,6 +286,7 @@ export default class JitsiMeetUIHelper {
                 case 'toggle-raise-hand':
                 case 'toggle-share-screen':                
                 case 'toggle-participants-pane':
+                case 'mute-everyone':
                     this.room.executeCommand(name, args);
                     break;
 

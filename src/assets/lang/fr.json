@@ -32,6 +32,7 @@
         "participant_hidden": "Liste des participants masquée.",
         "lobby_action": "Activer / Desactiver la salle d'attente.",
         "lobby_enabled": "Salle d'attente activée.",
-        "lobby_disabled": "Salle d'attente désactivée."
+        "lobby_disabled": "Salle d'attente désactivée.",
+        "mute-everyone_action": "Couper le microphone de tout les autres."
     }
 }

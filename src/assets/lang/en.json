@@ -32,6 +32,7 @@
         "participant_hidden": "Participants pannel hidden.",
         "lobby_action": "Enable / Disable the lobby.",
         "lobby_enabled": "Lobby is on.",
-        "lobby_disabled": "Lobby is off."
+        "lobby_disabled": "Lobby is off.",
+        "mute-everyone_action": "Mute all meeting participants."
     }
 }

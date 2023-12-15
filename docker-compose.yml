@@ -1,0 +1,16 @@
+services:
+  huihelper:
+    image: uihelper
+    build: .
+    container_name: uihelper
+    volumes:
+#     - ./config/apache.pem:/etc/apache2/apache2.pem
+#     - ./config/httpp_uihelper.conf:/config/http_uihelper.conf
+      - ./config/config_rdv.json:/config/config.json
+    ports:
+      - "8080:80"
+      - "8443:443"
+    logging:
+      driver: syslog
+      options:
+        tag: "uihelper"

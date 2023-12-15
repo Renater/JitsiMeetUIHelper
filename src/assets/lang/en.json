@@ -26,6 +26,13 @@
         "timeout": "Request timeout",
         "ivr_disclaimer": "Welcome to this JitsiMeet videoconference system",
         "ivr_enter_conference_number": "Please enter your conference number (end by #)",
-        "ivr_enter_conference_number_tts": "Please enter your conference number, end by sharp."
+        "ivr_enter_conference_number_tts": "Please enter your conference number, end by sharp.",
+        "participant_action": "Open / Close the participants pannel.",
+        "participant_shown": "Participants pannel shown.",
+        "participant_hidden": "Participants pannel hidden.",
+        "lobby_action": "Enable / Disable the lobby.",
+        "lobby_enabled": "Lobby is on.",
+        "lobby_disabled": "Lobby is off.",
+        "mute-everyone_action": "Mute all meeting participants."
     }
 }

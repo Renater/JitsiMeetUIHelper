@@ -140,6 +140,7 @@ export default class Room {
                   //  customIcons: {
                   //      SecurityOn: 'https://127.0.0.1:8443/UIhelper/assets/images/security-on_green.svg'
                   //  }
+                    testing : {no_customUI: true}
                 },
                 parentNode: mainContainer,
             }

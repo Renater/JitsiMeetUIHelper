@@ -28,6 +28,12 @@ export default class Room {
      */
     displayName = null;
 
+    /**
+     * Participant Id
+     *
+     * @type {string|null}
+     */
+    participantId = null;
 
     /**
      * JWT Token
@@ -154,7 +160,8 @@ export default class Room {
 
                 mainContainer.classList.remove('hidden');
 
-                context.jitsiApiClient.addListener('videoConferenceJoined', function () {
+                context.jitsiApiClient.addListener('videoConferenceJoined', function (response) {
+                    this.participantId = response.id;
                     // Add listeners when conference is ready
                     context.addAPIListeners();
                     context.addShortcutListeners();
@@ -254,8 +261,8 @@ export default class Room {
 
         // Moderator status
         this.jitsiApiClient.addListener('moderationStatusChanged', function (response) {
-        
-            }   
+
+            }
         );
 
         // notificationTriggered
@@ -263,9 +270,16 @@ export default class Room {
                 if (response.title == 'lobby' ){
 
                 }
-            }   
+            }
         );
 
+        this.jitsiApiClient.addListener('screenSharingStatusChanged', function (response) {
+                if (response.on == true ){
+                    let context = this;
+                    context.executeCommand('setLargeVideoParticipant', this.participantId, 'desktop');
+                }
+            }
+        );
     }
 
     /**

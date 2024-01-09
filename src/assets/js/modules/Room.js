@@ -273,13 +273,15 @@ export default class Room {
             }
         );
 
-        this.jitsiApiClient.addListener('screenSharingStatusChanged', function (response) {
-                if (response.on == true ){
-                    let context = this;
-                    context.executeCommand('setLargeVideoParticipant', this.participantId, 'desktop');
+        if (Config.get('auto_pin_local_sharing')) {
+            this.jitsiApiClient.addListener('screenSharingStatusChanged', function (response) {
+                    if (response.on == true ){
+                        let context = this;
+                        context.executeCommand('setLargeVideoParticipant', this.participantId, 'desktop');
+                    }
                 }
-            }
-        );
+            );
+        }
     }
 
     /**

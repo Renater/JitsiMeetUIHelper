@@ -11,6 +11,7 @@ export default class Config {
         "lang": "fr",
         "domain": null,
         "auto_hide_menu_timer": 10,
+        "auto_pin_local_sharing": false,
         "tts": {
             "ivr": {
                 "available": true,

@@ -26,6 +26,7 @@ Available parameters:
 | lang                           | Lang used by TTS (browser embedded Text To Speech)            |     x     |  string | fr            |
 | domain                         | Domain to initiate the room                                   |     x     |  string | undefined     |
 | auto_hide_menu_timer           | Automatically hide menu after this timer (in seconds)         |     x     |  number | 10            |
+| auto_pin_local_sharing         | Automatically pin local sharing video                         |     x     | boolean | false         |
 | tts                            | TTS configurations (Text To Speech)                           |           |  object |               |
 | tts.ivr                        | TTS configuration for "ivr"                                   |     x     |  object |               |
 | tts.ivr.available              | Enable / disable TTS                                          |     x     | boolean | true          |

@@ -108,6 +108,12 @@ export default class Room {
     initJitsiMeetConference() {
         return new Promise(resolve => {
             let mainContainer = document.getElementById('main_iframe_container');
+            
+            if(!this.roomToken) {
+                document.getElementById("mute_all").style.display = 'none';
+                document.getElementById("lobby").style.display = 'none';
+            }
+
             let mainOptions = {
                 roomName: this.roomID,
                 userInfo: {

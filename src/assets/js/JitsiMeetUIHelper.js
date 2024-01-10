@@ -146,10 +146,7 @@ export default class JitsiMeetUIHelper {
             document.querySelector('div[data-content="tts"]').classList.add('hide');
         }
 
-       if(!this.roomToken) {
-            document.getElementById("mute_all").style.display = 'none';
-            document.getElementById("lobby").style.display = 'none';
-        }
+   
 
         this.menuTimer = Config.get('auto_hide_menu_timer');
 

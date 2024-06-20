@@ -227,7 +227,7 @@ export default class JitsiMeetUIHelper {
         this.room.roomID = context.roomID;
         this.room.roomToken = context.roomToken;
         if (context.mappedDomain) {
-            Config.set('domain', `https://${mappedDomain}`);
+            Config.set('domain', `https://${context.mappedDomain}`);
         }
         this.room.initJitsiMeetConference().then(function () {
             context.#toggleMenu(true, true);

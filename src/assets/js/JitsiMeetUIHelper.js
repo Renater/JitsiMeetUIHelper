@@ -19,6 +19,14 @@ export default class JitsiMeetUIHelper {
     roomID = null;
 
     /**
+     * Destination Jitsi domain to use
+     *
+     * @type {string|number|null}
+     */
+    mappedDomain = null;
+
+
+    /**
      * User Display Name
      *
      * @type {string|number|null}
@@ -216,10 +224,9 @@ export default class JitsiMeetUIHelper {
      */
     initJitsiMeetConference() {
         let context = this;
-        this.room.roomID = context.roomID.split('@')[0];
+        this.room.roomID = context.roomID;
         this.room.roomToken = context.roomToken;
-        let mappedDomain = context.roomID.split('@conference.')[1];
-        if (mappedDomain) {
+        if (context.mappedDomain) {
             Config.set('domain', `https://${mappedDomain}`);
         }
         this.room.initJitsiMeetConference().then(function () {

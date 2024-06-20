@@ -230,8 +230,9 @@ export default class IVR {
     getConferenceToken(url,onError){
         let context = this;
         return new Promise(resolve => {
-            let roomName = context.helper.roomID.split('@')[0];
-            let mappedDomain = context.helper.roomID.split('@conference.')[1];
+            let roomName = context.helper.roomID;
+            let mappedDomain = context.helper.domain;
+          
             let onTimerError= function(reason){
                 resolve();
             };
@@ -275,8 +276,16 @@ export default class IVR {
                             .then(function (data) {
                                 if (data.hasOwnProperty('conference')) {
                                     context.mainIvrContainer.classList.add('hidden');
-                                    context.helper.roomID = data.conference;
-                                 
+                                    // Default extraction
+                                    context.helper.roomID = data.conference.split('@')[0];
+                                    context.helper.mappedDomain = data.conference.split('@conference.')[1];
+
+                                    //If returned by confmapper
+                                    if (data.hasOwnProperty('url'))
+                                        context.helper.roomID = data.url;
+                                    if (data.hasOwnProperty('domain'))
+                                        context.helper.mappedDomain = data.domain;    
+                                                                
                                     resolve();
                                 } else {
                                     onError(data);

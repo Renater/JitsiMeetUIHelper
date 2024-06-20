@@ -284,7 +284,7 @@ export default class IVR {
                                     if (data.hasOwnProperty('url'))
                                         context.helper.roomID = data.url;
                                     if (data.hasOwnProperty('meeting_instance'))
-                                        context.helper.mappedDomain = data.domain;    
+                                        context.helper.mappedDomain = data.meeting_instance;    
                                                                 
                                     resolve();
                                 } else {

@@ -25,7 +25,7 @@
         "room_id_bad_format": "Format du code de la conférence incorrect",
         "timeout": "Délai de la demande dépassé",
         "ivr_disclaimer": "Bienvenue dans ce système de visio conférence JitsiMeet",
-        "ivr_enter_conference_number": "Veuillez entrez le numéro de votre conférence (terminez par #)",
+        "ivr_enter_conference_number": "Veuillez entrez le numéro de votre conférence terminez par # (utilisez * pour corriger)",
         "ivr_enter_conference_number_tts": "Veuillez entrez le numéro de votre conférence, terminez par dièse.",
         "participant_action": "Ouvrir / Fermer la liste des participants.",
         "participant_shown": "Liste des participants affichée.",

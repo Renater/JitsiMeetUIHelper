@@ -1,0 +1,40 @@
+{
+    "lang": "fr",
+    "domain": "https://rendez-vous.renater.fr",
+    "auto_hide_menu_timer": 10,
+    "tts": {
+      "ivr": {
+        "available": true,
+        "speaker_on": true
+      },
+      "ui_helper": {
+        "available": true,
+        "speaker_on": false
+      },
+      "engine": "local_files",
+      "format": "mp3"
+    },
+    "ivr": {
+      "enabled": true,
+      "number": 0,
+      "confmapper_url": "https://rendez-vous.renater.fr/conf-api/",
+      "confmapper_endpoint": "conferenceMapper",
+      "auth_url": "https://rendez-vous.renater.fr/home/rest.php/Room",
+      "secure_regexp": "([a-zA-Z0-9\\_\\-])+_[0-9a-f]{6}-[0-9a-f]{6}-[0-9a-f]{6}",
+      "confmapper_timeout": 5000,
+      "conference_code": {
+        "min_length": 4,
+        "max_length": 10
+      }
+    },
+    "shortcuts":{
+      "show-dtmf-menu": "h",
+      "toggle-audio": "m",
+      "toggle-video": "v",
+      "toggle-chat": "c",
+      "toggle-tile-view": "w",
+      "toggle-rise-hand" : "r",
+      "toggle-tts" : "x"
+    }
+  }
+  

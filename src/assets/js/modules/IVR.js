@@ -231,7 +231,7 @@ export default class IVR {
         let context = this;
         return new Promise(resolve => {
             let roomName = context.helper.roomID;
-            let mappedDomain = context.helper.domain;
+            let mappedDomain = context.helper.mappedDomain;
           
             let onTimerError= function(reason){
                 resolve();

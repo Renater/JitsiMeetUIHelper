@@ -154,6 +154,7 @@ export default class Room {
                   //  }
                     testing : {no_customUI: true},
                     screenShareSettings: {
+                        desktopSystemAudio: 'exclude',
                         desktopDisplaySurface: 'monitor'
                     }
                 },
@@ -197,6 +198,40 @@ export default class Room {
             if (muted)
                 context.jitsiApiClient.executeCommand('toggleVideo');
         });
+
+        const listener = ({ enabled }) => {
+            this.jitsiApiClient.removeEventListener('tileViewChanged', listener);
+            this.jitsiApiClient.getContentSharingParticipants().then(res => {
+                let nbPart = this.jitsiApiClient.getNumberOfParticipants();
+                var ts = new Date().toJSON();
+                console.log(`${ts} TILE?, NB_PART, NB SHARING: ${enabled} ${nbPart} ${res.sharingParticipantIds.length}`);
+                if (enabled) {
+                        if (nbPart < 3 || res.sharingParticipantIds.length > 0){
+                            this.jitsiApiClient.executeCommand('toggleTileView');
+                        }
+                }
+                else if (nbPart >= 3 && res.sharingParticipantIds.length == 0) {
+                        this.jitsiApiClient.executeCommand('toggleTileView');
+                }
+            });
+            this.jitsiApiClient.addEventListener('tileViewChanged', listener);
+        }
+
+        this.jitsiApiClient.addEventListener('tileViewChanged', listener);
+        this.jitsiApiClient.executeCommand('toggleFilmStrip');
+
+        this.jitsiApiClient.addListener('contentSharingParticipantsChanged', ({data}) => {
+            this.jitsiApiClient.executeCommand('toggleTileView');
+        });
+
+        this.jitsiApiClient.addListener('participantJoined', () => {
+            this.jitsiApiClient.executeCommand('toggleTileView');
+        });
+        this.jitsiApiClient.addListener('participantLeft', () => {
+            this.jitsiApiClient.executeCommand('toggleTileView');
+        });
+
+        this.jitsiApiClient.executeCommand('toggleTileView');
     }
 
 

@@ -171,11 +171,10 @@ export default class Room {
                 mainContainer.classList.remove('hidden');
 
                 context.jitsiApiClient.addListener('videoConferenceJoined', function (response) {
-                    this.participantId = response.id;
+                    context.participantId = response.id;
                     // Add listeners when conference is ready
                     context.addAPIListeners();
                     context.addShortcutListeners();
-                   // context.jitsiApiClient.executeCommand('overwriteConfig', { toolbarButtons: [] });
                     context.initMediaState();
                     resolve();
                 });
@@ -185,6 +184,28 @@ export default class Room {
         });
     }
 
+    toggleTileView = ({}) => {
+        let context = this;
+        context.jitsiApiClient.executeCommand('toggleTileView');
+    }
+
+    toggleTileViewListerner = ({ enabled }) => {
+        let context = this;
+        let minPartTileView = Config.get('min_part_tile_view');
+        this.jitsiApiClient.removeListener('tileViewChanged', context.toggleTileViewListerner);
+        this.jitsiApiClient.getContentSharingParticipants().then(res => {
+            let nbPart = this.jitsiApiClient.getNumberOfParticipants();
+            if (enabled) {
+                    if (nbPart < minPartTileView || res.sharingParticipantIds.length > 0){
+                        this.jitsiApiClient.executeCommand('toggleTileView');
+                    }
+            }
+            else if (nbPart >= minPartTileView && res.sharingParticipantIds.length == 0) {
+                    this.jitsiApiClient.executeCommand('toggleTileView');
+            }
+        });
+        this.jitsiApiClient.addListener('tileViewChanged', context.toggleTileViewListerner);
+    }
 
     initMediaState(){
         let context = this;
@@ -199,41 +220,23 @@ export default class Room {
                 context.jitsiApiClient.executeCommand('toggleVideo');
         });
 
-        const listener = ({ enabled }) => {
-            this.jitsiApiClient.removeEventListener('tileViewChanged', listener);
-            this.jitsiApiClient.getContentSharingParticipants().then(res => {
-                let nbPart = this.jitsiApiClient.getNumberOfParticipants();
-                var ts = new Date().toJSON();
-                console.log(`${ts} TILE?, NB_PART, NB SHARING: ${enabled} ${nbPart} ${res.sharingParticipantIds.length}`);
-                if (enabled) {
-                        if (nbPart < 3 || res.sharingParticipantIds.length > 0){
-                            this.jitsiApiClient.executeCommand('toggleTileView');
-                        }
-                }
-                else if (nbPart >= 3 && res.sharingParticipantIds.length == 0) {
-                        this.jitsiApiClient.executeCommand('toggleTileView');
-                }
-            });
-            this.jitsiApiClient.addEventListener('tileViewChanged', listener);
-        }
+        this.jitsiApiClient.addListener('tileViewChanged', context.toggleTileViewListerner);
 
-        this.jitsiApiClient.addEventListener('tileViewChanged', listener);
-        this.jitsiApiClient.executeCommand('toggleFilmStrip');
-
-        this.jitsiApiClient.addListener('contentSharingParticipantsChanged', ({data}) => {
-            this.jitsiApiClient.executeCommand('toggleTileView');
-        });
-
-        this.jitsiApiClient.addListener('participantJoined', () => {
-            this.jitsiApiClient.executeCommand('toggleTileView');
-        });
-        this.jitsiApiClient.addListener('participantLeft', () => {
-            this.jitsiApiClient.executeCommand('toggleTileView');
-        });
+        this.jitsiApiClient.addListener('contentSharingParticipantsChanged', context.toggleTileView);
+        this.jitsiApiClient.addListener('participantJoined', context.toggleTileView);
+        this.jitsiApiClient.addListener('participantLeft', context.toggleTileView);
 
         this.jitsiApiClient.executeCommand('toggleTileView');
     }
 
+    switchVideoLayout() {
+        let context = this;
+        this.jitsiApiClient.removeListener('tileViewChanged', context.toggleTileViewListerner);
+        this.jitsiApiClient.removeListener('contentSharingParticipantsChanged', context.toggleTileView);
+        this.jitsiApiClient.removeListener('participantJoined', context.toggleTileView);
+        this.jitsiApiClient.removeListener('participantLeft', context.toggleTileView);
+        this.jitsiApiClient.executeCommand('toggleTileView')
+    }
 
     /**
      * Listen to state changes
@@ -271,7 +274,6 @@ export default class Room {
              }
         );
 
-
         // Hide / show tile view
         this.jitsiApiClient.addListener('tileViewChanged', function (response) {
                 if (Config.get('tts.ui_helper.speaker_on'))
@@ -286,14 +288,12 @@ export default class Room {
             }
         );
 
-
         // Hide / show tile view Participant Pane
         this.jitsiApiClient.addListener('participantsPaneToggled', function (response) {
             if (Config.get('tts.ui_helper.speaker_on'))
                 TTS.speak(response.open ? 'participant_shown' : 'participant_hidden', 'ui_helper');
         });
         
-
 
         // Hangup, go to IVR root page
         this.jitsiApiClient.addListener('toolbarButtonClicked', function (response) {
@@ -321,7 +321,7 @@ export default class Room {
             this.jitsiApiClient.addListener('screenSharingStatusChanged', function (response) {
                     if (response.on == true ){
                         let context = this;
-                        context.executeCommand('setLargeVideoParticipant', this.participantId, 'desktop');
+                        context.jitsiApiClient.executeCommand('setLargeVideoParticipant', this.participantId, 'desktop');
                     }
                 }
             );
@@ -369,10 +369,12 @@ export default class Room {
                 case 'mute-everyone':
                     this.jitsiApiClient.executeCommand(this.commands[name],  'audio' );
                     break;
+                case 'toggle-tile-view':
+                    this.switchVideoLayout();
+                    break;
                 case 'toggle-audio':
                 case 'toggle-video':
                 case 'toggle-chat':
-                case 'toggle-tile-view':
                 case 'toggle-raise-hand':
                 case 'mute-everyone':
                 case 'toggle-share-screen':

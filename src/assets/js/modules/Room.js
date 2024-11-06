@@ -135,6 +135,9 @@ export default class Room {
                     startWithVideoMuted: false,
                     enableNoisyMicDetection: false,
                     prejoinPageEnabled: false,
+                    videoQuality: {
+                        codecPreferenceOrder: [ 'VP8', 'H264' ]
+                    },
                     prejoinConfig: {
                         enabled: false
                     },
@@ -176,6 +179,7 @@ export default class Room {
                     context.addShortcutListeners();
                    // context.jitsiApiClient.executeCommand('overwriteConfig', { toolbarButtons: [] });
                     context.initMediaState();
+                    context.initName();
                     resolve();
                 });
             };
@@ -184,6 +188,25 @@ export default class Room {
         });
     }
 
+    generateRandomString(length = 5) {
+        const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters.charAt(randomIndex);
+        }
+        return result;
+    }
+    
+    initName(){
+        let context = this;
+        let name =  this.displayName;
+        const ipRegex = /^(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])(\.(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])){3}$/;
+        if (ipRegex.test(name)){
+            name = "Meeting Room "+ context.generateRandomString(6);
+        }
+        context.jitsiApiClient.executeCommand('displayName', name);
+    }
 
     initMediaState(){
         let context = this;

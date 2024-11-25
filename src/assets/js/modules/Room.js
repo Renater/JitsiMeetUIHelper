@@ -206,6 +206,8 @@ export default class Room {
             name = "Meeting Room "+ context.generateRandomString(6);
         }
         context.jitsiApiClient.executeCommand('displayName', name);
+    }
+
     toggleTileView = ({}) => {
         let context = this;
         context.jitsiApiClient.executeCommand('toggleTileView');

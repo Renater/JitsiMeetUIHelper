@@ -2,6 +2,8 @@ import Config from './Config.js';
 import TTS from './TTS.js';
 import Lang from './Lang.js';
 
+import AudioEgress from "./mediaIO/Audio.js";
+
 /**
  * Class JitsiRoom
  */
@@ -142,7 +144,7 @@ export default class Room {
                         enabled: false
                     },
                     autoKnockLobby: true,
-                    p2p: {enabled: true},
+                    p2p: {enabled: false},
                     desktopSharingChromeDisabled: false,
                     disableShortcuts: true,
                     buttonsWithNotifyClick:[
@@ -233,6 +235,8 @@ export default class Room {
 
     initMediaState(){
         let context = this;
+
+        this.AudioEgress = new AudioEgress(this.jitsiApiClient);
 
         context.jitsiApiClient.isAudioMuted().then(muted => {
             if (muted)

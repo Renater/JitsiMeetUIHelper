@@ -12,27 +12,25 @@ export default class AudioEgress {
     participantsMap = null;
     activeAudioStreams = null;
 
-    constructor(jitsiAPI){
-        if(jitsiAPI){
+    constructor(jitsiAPI) {
+        if (jitsiAPI) {
             this.jitsiAPI = jitsiAPI;
             this.iframe = jitsiAPI.getIFrame();
         }
-        this.wsUrl = 'ws://127.0.0.1:8080';
+        this.wsUrl = 'ws://127.0.0.1:9000';
         this.ws = null;
-        this.audioContext = new AudioContext();
+        this.audioContext = new AudioContext({ sampleRate: 8000 });
         this.mergerNode = this.audioContext.createChannelMerger();
         this.gainNode = this.audioContext.createGain();
-        this.audioNode = null; // AudioWorkletNode
-        this.participantsMap = new Map(); // actif participants
+        this.audioNode = null;
+        this.participantsMap = new Map();
         this.activeAudioStreams = new Set();
         this.intervalId = null;
+        this.reconnectTimeout = null; // Reconnection timeout handler
     }
 
     async init() {
-        // Init WebSocket
-        this.ws = new WebSocket(this.wsUrl);
-        this.ws.onopen = () => console.log('WebSocket connecté.');
-        this.ws.onclose = () => console.log('WebSocket déconnecté.');
+        this.setupWebSocket();
 
         // Load AudioWorkletProcessor
         await this.audioContext.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
@@ -40,9 +38,9 @@ export default class AudioEgress {
                 constructor() {
                     super();
                     this.buffer = [];
-                    this.pkt_size=128;
+                    this.pkt_size = 160;
                 }
-                
+
                 process(inputs) {
                     const input = inputs[0];
                     if (input && input[0]) {
@@ -59,7 +57,6 @@ export default class AudioEgress {
             }
             registerProcessor('audio-processor', AudioProcessor);
         `));
-    
 
         // Configure audio mixing
         this.audioNode = new AudioWorkletNode(this.audioContext, 'audio-processor');
@@ -71,29 +68,80 @@ export default class AudioEgress {
         this.audioNode.port.onmessage = event => {
             const audioData = event.data;
             const audioBuffer = this.float32ToInt16(audioData);
-            if (this.ws.readyState === WebSocket.OPEN) {
-                //this.ws.send(new Uint8Array([0x02, ...audioBuffer])); // Tag audio avec 0x02
-                this.ws.send(audioBuffer); 
+            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                this.ws.send(audioBuffer);
                 console.log('Mixed audio data sent');
             }
         };
 
-        console.log('AudioStreamManager initiated.');
+        console.log('AudioStreamManager initialized.');
     }
 
-    // Float32Array to Int16Array for PCM (16 bits)
+    setupWebSocket() {
+        // Initialize WebSocket connection
+        this.ws = new WebSocket(this.wsUrl);
+
+        this.ws.onopen = () => {
+            console.log('WebSocket connected.');
+            if (this.reconnectTimeout) {
+                clearTimeout(this.reconnectTimeout);
+                this.reconnectTimeout = null;
+            }
+        };
+
+        this.ws.onmessage = event => {
+            console.log('Message from server:', event.data);
+        };
+
+        this.ws.onerror = err => {
+            console.error('WebSocket error:', err);
+        };
+
+        this.ws.onclose = event => {
+            console.warn('WebSocket closed. Reason:', event.reason || 'Unknown');
+            if (!event.wasClean) {
+                console.warn('Unexpected disconnection from server.');
+                this.handleServerDisconnection();
+            }
+        };
+    }
+
+    handleServerDisconnection() {
+        // Stop scanning participants and clean up
+        this.stopScan();
+
+        // Notify user about server unavailability
+        console.error('The server is unavailable. Stopping audio transmission.');
+
+        // Optionally, attempt reconnection
+        this.reconnectTimeout = setTimeout(() => {
+            console.log('Attempting to reconnect to the server...');
+            this.setupWebSocket();
+        }, 5000); // Retry after 5 seconds
+    }
+
+    async close() {
+        this.stopScan();
+        this.participantsMap.forEach((_, name) => this.removeParticipant(name));
+        if (this.ws) {
+            this.ws.close();
+            this.ws = null;
+        }
+        await this.audioContext.close();
+        console.log('AudioStreamManager closed.');
+    }
+
     float32ToInt16(float32Array) {
         const int16Array = new Int16Array(float32Array.length);
 
         for (let i = 0; i < float32Array.length; i++) {
             const s = Math.max(-1, Math.min(1, float32Array[i]));
-            // Int16 conversion
             int16Array[i] = s * 32768; 
         }
-    
+
         console.log(`float32Array: min=${Math.min(...float32Array)}, max=${Math.max(...float32Array)}`);
         console.log(`int16Array: min=${Math.min(...int16Array)}, max=${Math.max(...int16Array)}`);
-    
+
         return new Uint8Array(int16Array.buffer);
     }
 

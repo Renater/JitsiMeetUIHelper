@@ -49,7 +49,7 @@ async def handler(websocket, path=None):
             print("Audio stream stopped")
 
 async def main():
-    async with websockets.serve(handler, "0.0.0.0", 8080):
+    async with websockets.serve(handler, "0.0.0.0", 9000):
         print("WebSocket server started")
         await asyncio.Future()  # Maintain in active state
 

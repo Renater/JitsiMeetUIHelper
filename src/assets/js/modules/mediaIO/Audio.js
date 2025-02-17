@@ -1,39 +1,146 @@
+class Participant {
+    constructor(name, startTime, audioContext, audioSource, audioNode) {
+        this.name = name;
+        this.startTime = startTime;
+        this.ws = null;
+        this.audioContext = audioContext;
+        this.audioSource = audioSource;
+        this.audioNode = audioNode;
+    }
+
+    createWebSocket(wsBaseUrl) {
+        const wsUrl = `${wsBaseUrl}/${encodeURIComponent(this.name)}`;
+        this.ws = new WebSocket(wsUrl);
+
+        this.ws.onopen = () => {
+            console.log(`WebSocket connected for participant: ${this.name}`);
+        };
+
+        this.ws.onerror = err => {
+            console.error(`WebSocket error for participant ${this.name}:`, err);
+        };
+
+        this.ws.onclose = () => {
+            console.log(`WebSocket closed for participant: ${this.name}`);
+        };
+    }
+
+    sendAudio(samples) {
+        if (this.ws.readyState === WebSocket.OPEN) {
+            const payload = {
+                start_time: this.startTime, // Start time of the stream
+                data: samples, // PCM samples array
+            };
+            this.ws.send(JSON.stringify(payload));
+        }
+    }
+
+    close() {
+        this.audioSource.disconnect();
+        this.audioNode.disconnect();
+        this.audioContext.close();
+        this.ws.close();
+        console.log(`Closed participant: ${this.name}`);
+    }
+}
+
+
 /**
  * Class AudioEgress
  */
 export default class AudioEgress {
+    constructor(jitsiAPI, wsBaseUrl = 'ws://127.0.0.1:9000') {
+        if (!jitsiAPI) throw new Error("Jitsi API instance is required");
 
-    jitsiAPI = null;
-    iframe = null;
+        this.jitsiAPI = jitsiAPI;
+        this.iframe = jitsiAPI.getIFrame();
+        this.participants = new Map();  // Key = participant name
 
-    mergerNode = null;
-    gainNode = null;
-    audioNode = null;
-    participantsMap = null;
-    activeAudioStreams = null;
+        this.wsBaseUrl = wsBaseUrl;
+        this.trackAddedListenerAttached = false;
+        this.trackRemovedListenerAttached = false;
 
-    constructor(jitsiAPI) {
-        if (jitsiAPI) {
-            this.jitsiAPI = jitsiAPI;
-            this.iframe = jitsiAPI.getIFrame();
-        }
-        this.wsUrl = 'ws://127.0.0.1:9000';
-        this.ws = null;
-        this.audioContext = new AudioContext({ sampleRate: 8000 });
-        this.mergerNode = this.audioContext.createChannelMerger();
-        this.gainNode = this.audioContext.createGain();
-        this.audioNode = null;
-        this.participantsMap = new Map();
-        this.activeAudioStreams = new Set();
-        this.intervalId = null;
-        this.reconnectTimeout = null; // Reconnection timeout handler
+        this.init();
     }
 
     async init() {
-        this.setupWebSocket();
+        const jitsiRoom = this.iframe.contentWindow.APP.conference._room;
 
-        // Load AudioWorkletProcessor
-        await this.audioContext.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
+        // check existing audio tracks
+        jitsiRoom.participants.forEach((participant) => {
+            participant._tracks.forEach((track) => {
+                if (track.getType() === "audio" && !track.isMuted()) {
+                    this.handleTrackAdded(track);
+                }
+            });
+        });
+
+        // wait for new audio tracks
+        if (!this.trackAddedListenerAttached) {
+            this.trackAddedListenerAttached = true;
+            jitsiRoom.on(this.iframe.contentWindow.JitsiMeetJS.events.conference.TRACK_ADDED,
+                         (track) => this.handleTrackAdded(track));
+        }
+
+        if (!this.trackRemovedListenerAttached) {
+            this.trackRemovedListenerAttached = true;
+            jitsiRoom.on(this.iframe.contentWindow.JitsiMeetJS.events.conference.TRACK_REMOVED,
+                         (track) => this.handleTrackRemoved(track));
+        }
+    }
+
+    async handleTrackAdded(track) {
+        //if (track.getType() !== "audio" || track.isMuted()) return;
+        if (track.getType() !== "audio") return;
+
+        const participantId = track.getParticipantId();
+        const participant = this.getParticipantName(participantId);
+
+        if (!participant) {
+            console.warn('No participant found with ID: ${participantId}');
+            return;
+        }
+
+        if (this.participants.has(participant)) {
+            console.warn('Audio already captured for: ${participant}');
+            return;
+        }
+
+        console.log('Audio captured for: ${participant}');
+
+        const mediaStream = new MediaStream([track.getOriginalStream().getAudioTracks()[0]]);
+        const startTime = Date.now();
+
+        const newParticipant = await this.createParticipant(participant, mediaStream, startTime);
+
+        this.participants.set(participant, newParticipant);
+    }
+
+    handleTrackRemoved(track) {
+        if (track.getType() !== "audio") return;
+
+        const participantId = track.getParticipantId();
+        const participant = this.getParticipantName(participantId);
+
+        if (this.participants.has(participant)) {
+            console.log('Audio stopped for ${participant}');
+            this.participants.get(participant).close();
+            this.participants.delete(participant);
+        }
+    }
+
+    float32ToInt16(float32Array) {
+        const int16Array = new Int16Array(float32Array.length);
+        for (let i = 0; i < float32Array.length; i++) {
+            const s = Math.max(-1, Math.min(1, float32Array[i]));
+            int16Array[i] = s * 32768;
+        }
+        return Array.from(int16Array);
+    }
+
+    async createParticipant(name, mediaStream, startTime) {
+        const audioContext = new AudioContext();
+        await audioContext.audioWorklet.addModule('data:application/javascript,' + encodeURIComponent(`
             class AudioProcessor extends AudioWorkletProcessor {
                 constructor() {
                     super();
@@ -58,192 +165,27 @@ export default class AudioEgress {
             registerProcessor('audio-processor', AudioProcessor);
         `));
 
-        // Configure audio mixing
-        this.audioNode = new AudioWorkletNode(this.audioContext, 'audio-processor');
-        this.mergerNode.connect(this.gainNode);
-        this.gainNode.connect(this.audioNode);
-        this.audioNode.connect(this.audioContext.destination);
+        const audioSource = audioContext.createMediaStreamSource(mediaStream);
+        const audioNode = new AudioWorkletNode(audioContext, 'audio-processor');
 
-        // Send (mixed) audio data
-        this.audioNode.port.onmessage = event => {
+        const participant = new Participant(name, startTime, audioContext, audioSource, audioNode);
+        participant.createWebSocket(this.wsBaseUrl);
+
+        audioNode.port.onmessage = (event) => {
             const audioData = event.data;
-            const audioBuffer = this.float32ToInt16(audioData);
-            if (this.ws && this.ws.readyState === WebSocket.OPEN) {
-                this.ws.send(audioBuffer);
-                console.log('Mixed audio data sent');
-            }
+            const audioPcm = this.float32ToInt16(audioData);
+            participant.sendAudio(audioPcm);
         };
 
-        console.log('AudioStreamManager initialized.');
+        audioSource.connect(audioNode).connect(audioContext.destination);
+        return participant;
     }
 
-    setupWebSocket() {
-        // Initialize WebSocket connection
-        this.ws = new WebSocket(this.wsUrl);
+    getParticipantName(participantId) {
+        const jitsiRoom = this.iframe.contentWindow.APP.conference._room;
+        const participantEntry = Array.from(jitsiRoom.participants.entries())
+            .find(([_, p]) => p._id === participantId);
 
-        this.ws.onopen = () => {
-            console.log('WebSocket connected.');
-            if (this.reconnectTimeout) {
-                clearTimeout(this.reconnectTimeout);
-                this.reconnectTimeout = null;
-            }
-        };
-
-        this.ws.onmessage = event => {
-            console.log('Message from server:', event.data);
-        };
-
-        this.ws.onerror = err => {
-            console.error('WebSocket error:', err);
-        };
-
-        this.ws.onclose = event => {
-            console.warn('WebSocket closed. Reason:', event.reason || 'Unknown');
-            if (!event.wasClean) {
-                console.warn('Unexpected disconnection from server.');
-                this.handleServerDisconnection();
-            }
-        };
-    }
-
-    handleServerDisconnection() {
-        // Stop scanning participants and clean up
-        this.stopScan();
-
-        // Notify user about server unavailability
-        console.error('The server is unavailable. Stopping audio transmission.');
-
-        // Optionally, attempt reconnection
-        this.reconnectTimeout = setTimeout(() => {
-            console.log('Attempting to reconnect to the server...');
-            this.setupWebSocket();
-        }, 5000); // Retry after 5 seconds
-    }
-
-    async close() {
-        this.stopScan();
-        this.participantsMap.forEach((_, name) => this.removeParticipant(name));
-        if (this.ws) {
-            this.ws.close();
-            this.ws = null;
-        }
-        await this.audioContext.close();
-        console.log('AudioStreamManager closed.');
-    }
-
-    float32ToInt16(float32Array) {
-        const int16Array = new Int16Array(float32Array.length);
-
-        for (let i = 0; i < float32Array.length; i++) {
-            const s = Math.max(-1, Math.min(1, float32Array[i]));
-            int16Array[i] = s * 32768; 
-        }
-
-        console.log(`float32Array: min=${Math.min(...float32Array)}, max=${Math.max(...float32Array)}`);
-        console.log(`int16Array: min=${Math.min(...int16Array)}, max=${Math.max(...int16Array)}`);
-
-        return new Uint8Array(int16Array.buffer);
-    }
-
-    addParticipant(name, audioElement, muted) {
-        if (muted || this.participantsMap.has(name)) return;
-
-        const audioStream = audioElement.srcObject;
-        const audioSource = this.audioContext.createMediaStreamSource(audioStream);
-        console.log('Sampling rate of mixed steam:', this.audioContext.sampleRate);
-        audioSource.connect(this.mergerNode); // add to mixer
-        this.participantsMap.set(name, { audioSource, muted });
-
-        console.log(`Added participant : ${name}`);
-    }
-
-    removeParticipant(name) {
-        const participant = this.participantsMap.get(name);
-        if (participant) {
-            participant.audioSource.disconnect();
-            this.participantsMap.delete(name);
-            console.log(`Deleted participant : ${name}`);
-        }
-    }
-
-    updateParticipantMuteStatus(name, muted, audioElement) {
-        if (muted) {
-            this.removeParticipant(name);
-        } else if (!this.participantsMap.has(name)) {
-            this.addParticipant(name, audioElement, muted);
-        }
-    }
-
-    scanParticipants() {
-
-        let iframeDoc = this.iframe.contentWindow.document;
-
-        // Look for remote audio elements
-        const audioElements = iframeDoc.querySelectorAll('audio[id^="remoteAudio_remote-audio-"]');
-        const currentParticipants = new Set();
-
-        audioElements.forEach(audioElement => {
-            // Extract element index
-            const audioId = audioElement.id;
-            const index = audioId.replace('remoteAudio_remote-audio-', '');
-
-            // Build corresponding video ID
-            const videoId = `remoteVideo_remote-video-${index}`;
-            const videoElement = iframeDoc.getElementById(videoId);
-
-            // Look for video container
-            const videoContainer = videoElement?.closest('span.videocontainer:not(#localVideocontainer)');
-
-            if (videoContainer) {
-                // Look for participant name
-                const nameElement = videoContainer.querySelector('.displayname');
-                const participantName = nameElement ? nameElement.textContent.trim() : null;
-
-                // Detect mute state
-                const mutedIndicator = videoContainer.querySelector('#audioMuted');
-                const isMuted = !!mutedIndicator;
-
-                if (participantName) {
-                    currentParticipants.add(participantName);
-
-                    if (!this.participantsMap.has(participantName)) {
-                        this.addParticipant(participantName, audioElement, isMuted);
-                    } else {
-                        this.updateParticipantMuteStatus(participantName, isMuted, audioElement);
-                    }
-                }
-            }
-        });
-
-        // Delete participants who left the meeting
-        Array.from(this.participantsMap.keys()).forEach(name => {
-            if (!currentParticipants.has(name)) {
-                this.removeParticipant(name);
-            }
-        });
-
-        // Print mappings
-        console.log(this.participantsMap);
-    }
-
-    startScan(interval = 2000) {
-        this.intervalId = setInterval(() => this.scanParticipants(), interval);
-        console.log('Participant scan started');
-    }
-
-    stopScan() {
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-            console.log('Participant scan stopped');
-        }
-    }
-
-    async close() {
-        this.stopScan();
-        this.participantsMap.forEach((_, name) => this.removeParticipant(name));
-        if (this.ws) this.ws.close();
-        await this.audioContext.close();
-        console.log('AudioStreamManager fermé.');
+        return participantEntry ? participantEntry[1]._displayName : null;
     }
 }

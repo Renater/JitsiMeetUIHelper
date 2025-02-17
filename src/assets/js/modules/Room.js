@@ -161,7 +161,8 @@ export default class Room {
                     screenShareSettings: {
                         desktopSystemAudio: 'exclude',
                         desktopDisplaySurface: 'monitor'
-                    }
+                    },
+                    disableSelfView: Config.get("disable_self_view")
                 },
                 parentNode: mainContainer,
             }
@@ -248,13 +249,13 @@ export default class Room {
                 context.jitsiApiClient.executeCommand('toggleVideo');
         });
 
-        this.jitsiApiClient.addListener('tileViewChanged', context.toggleTileViewListerner);
+        //this.jitsiApiClient.addListener('tileViewChanged', context.toggleTileViewListerner);
 
-        this.jitsiApiClient.addListener('contentSharingParticipantsChanged', context.toggleTileView);
-        this.jitsiApiClient.addListener('participantJoined', context.toggleTileView);
-        this.jitsiApiClient.addListener('participantLeft', context.toggleTileView);
+        //this.jitsiApiClient.addListener('contentSharingParticipantsChanged', context.toggleTileView);
+        //this.jitsiApiClient.addListener('participantJoined', context.toggleTileView);
+        //this.jitsiApiClient.addListener('participantLeft', context.toggleTileView);
 
-        this.jitsiApiClient.executeCommand('toggleTileView');
+        //this.jitsiApiClient.executeCommand('toggleTileView');
     }
 
     switchVideoLayout() {
@@ -398,7 +399,8 @@ export default class Room {
                     this.jitsiApiClient.executeCommand(this.commands[name],  'audio' );
                     break;
                 case 'toggle-tile-view':
-                    this.switchVideoLayout();
+                    //this.switchVideoLayout();
+                    this.jitsiApiClient.executeCommand(this.commands[name], args);
                     break;
                 case 'toggle-audio':
                 case 'toggle-video':

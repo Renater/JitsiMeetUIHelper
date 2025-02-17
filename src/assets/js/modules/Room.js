@@ -150,7 +150,7 @@ export default class Room {
                     buttonsWithNotifyClick:[
                         'hangup'
                     ],
-                    toolbarButtons: ['security'],
+                    toolbarButtons: [Config.get("disable_menu")?'':'security'],
                     toolbarConfig : {
                         alwaysVisible : true
                     },

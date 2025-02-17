@@ -4,6 +4,8 @@
   "auto_hide_menu_timer": 10,
   "auto_pin_local_sharing": false,
   "min_part_tile_view": 2,
+  "disable_self_view": false,
+  "disable_menu": false,
   "tts": {
     "ivr": {
       "available": true,

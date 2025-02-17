@@ -230,8 +230,10 @@ export default class JitsiMeetUIHelper {
             Config.set('domain', `https://${context.mappedDomain}`);
         }
         this.room.initJitsiMeetConference().then(function () {
-            context.#toggleMenu(true, true);
-            document.getElementById('dtmf_show_menu').classList.remove('hidden')
+            if(!Config.get("disable_menu")) {
+                context.#toggleMenu(true, true);
+                document.getElementById('dtmf_show_menu').classList.remove('hidden')
+            }
             // Translate menu elements
             document.getElementById("micro_action")
                 .innerText = Lang.translate('micro_action');

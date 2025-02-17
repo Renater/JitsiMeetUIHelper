@@ -2,6 +2,8 @@ import Config from './Config.js';
 import TTS from './TTS.js';
 import Lang from './Lang.js';
 
+import AudioEgress from "./mediaIO/Audio.js";
+
 /**
  * Class JitsiRoom
  */
@@ -142,7 +144,7 @@ export default class Room {
                         enabled: false
                     },
                     autoKnockLobby: true,
-                    p2p: {enabled: true},
+                    p2p: {enabled: false},
                     desktopSharingChromeDisabled: false,
                     disableShortcuts: true,
                     buttonsWithNotifyClick:[
@@ -159,7 +161,8 @@ export default class Room {
                     screenShareSettings: {
                         desktopSystemAudio: 'exclude',
                         desktopDisplaySurface: 'monitor'
-                    }
+                    },
+                    disableSelfView: Config.get("disable_self_view")
                 },
                 parentNode: mainContainer,
             }
@@ -234,6 +237,8 @@ export default class Room {
     initMediaState(){
         let context = this;
 
+        this.AudioEgress = new AudioEgress(this.jitsiApiClient);
+
         context.jitsiApiClient.isAudioMuted().then(muted => {
             if (muted)
                 context.jitsiApiClient.executeCommand('toggleAudio');
@@ -244,13 +249,13 @@ export default class Room {
                 context.jitsiApiClient.executeCommand('toggleVideo');
         });
 
-        this.jitsiApiClient.addListener('tileViewChanged', context.toggleTileViewListerner);
+        //this.jitsiApiClient.addListener('tileViewChanged', context.toggleTileViewListerner);
 
-        this.jitsiApiClient.addListener('contentSharingParticipantsChanged', context.toggleTileView);
-        this.jitsiApiClient.addListener('participantJoined', context.toggleTileView);
-        this.jitsiApiClient.addListener('participantLeft', context.toggleTileView);
+        //this.jitsiApiClient.addListener('contentSharingParticipantsChanged', context.toggleTileView);
+        //this.jitsiApiClient.addListener('participantJoined', context.toggleTileView);
+        //this.jitsiApiClient.addListener('participantLeft', context.toggleTileView);
 
-        this.jitsiApiClient.executeCommand('toggleTileView');
+        //this.jitsiApiClient.executeCommand('toggleTileView');
     }
 
     switchVideoLayout() {
@@ -394,7 +399,8 @@ export default class Room {
                     this.jitsiApiClient.executeCommand(this.commands[name],  'audio' );
                     break;
                 case 'toggle-tile-view':
-                    this.switchVideoLayout();
+                    //this.switchVideoLayout();
+                    this.jitsiApiClient.executeCommand(this.commands[name], args);
                     break;
                 case 'toggle-audio':
                 case 'toggle-video':

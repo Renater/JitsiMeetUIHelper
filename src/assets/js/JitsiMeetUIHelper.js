@@ -70,6 +70,13 @@ export default class JitsiMeetUIHelper {
      */
     menuInterval = null;
 
+    /**
+     * Indicate if the webconference interface is inited
+     * @type {boolean}
+     */
+    webconference_interface_inited = false
+
+    
 
     /**
      * List of available commands
@@ -230,6 +237,7 @@ export default class JitsiMeetUIHelper {
             Config.set('domain', `https://${context.mappedDomain}`);
         }
         this.room.initJitsiMeetConference().then(function () {
+            context.webconference_interface_inited = true;
             if(!Config.get("disable_menu")) {
                 context.#toggleMenu(true, true);
                 document.getElementById('dtmf_show_menu').classList.remove('hidden')
@@ -267,6 +275,10 @@ export default class JitsiMeetUIHelper {
      * @param args
      */
     executeCommand(name, ...args) {
+        // Don't execute comand in interface before in was inited
+        if (!this.webconference_interface_inited)
+            return;
+            
         if (!(name in this.commands)) {
             console.error(`[Error] Command '${name}' not found`)
 

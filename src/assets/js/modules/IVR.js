@@ -269,7 +269,7 @@ export default class IVR {
     getConferenceName(url,onError) {
         let context = this;
         return new Promise(resolve => {
-            Utils.fetchWithTimeout(`${url}?id=${this.roomID}`, {method: 'get'}, onError)
+            Utils.fetchWithTimeout(`${url}=${this.roomID}`, {method: 'get'}, onError)
                 .then(response => {
                     try {
                         response.json()

@@ -5,6 +5,7 @@
   "auto_pin_local_sharing": false,
   "min_part_tile_view": 2,
   "disable_self_view": false,
+  "audio_only": false,
   "disable_menu": false,
   "tts": {
     "ivr": {

@@ -133,8 +133,10 @@ export default class Room {
                     noSSL: false,
                     callStatsID: '',
                     defaultLanguage: Lang.langCode,
+                    toolbarButtons: [Config.get("disable_menu")?'':'security'],
                     startWithAudioMuted: false,
-                    startWithVideoMuted: false,
+                    startWithVideoMuted: Config.get("audio_only"),
+                    startAudioOnly: Config.get("audio_only"),
                     enableNoisyMicDetection: false,
                     prejoinPageEnabled: false,
                     videoQuality: {
@@ -245,7 +247,7 @@ export default class Room {
         });
 
         context.jitsiApiClient.isVideoMuted().then(muted => {
-            if (muted)
+            if (muted && !Config.get("audio_only"))
                 context.jitsiApiClient.executeCommand('toggleVideo');
         });
 
